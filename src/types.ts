@@ -23,11 +23,11 @@ export interface EventHandler {
 /**
  * Represents a command callback for execution of the command.
  */
-export type CommandCallback = (
-    message: Message,
-    args: string[],
-    client: AeroClient
-) => unknown;
+export type CommandCallback = (context: {
+    message: Message;
+    args: string[];
+    client: AeroClient;
+}) => unknown;
 
 /**
  * A command that the client will load.
@@ -42,6 +42,26 @@ export interface Command {
      */
     aliases?: string[];
     /**
+     * The command's category.
+     */
+    category?: string;
+    /**
+     * Are arguments required to execute the command.
+     */
+    args?: boolean;
+    /**
+     * The command's usage.
+     */
+    usage?: string;
+    /**
+     * The command's cooldown in seconds.
+     */
+    cooldown?: number;
+    /**
+     * Description of the command.
+     */
+    description?: string;
+    /**
      * The callback to execute.
      */
     callback: CommandCallback;
@@ -51,10 +71,52 @@ export interface Command {
  * Options for the client.
  */
 export interface AeroClientOptions {
+    /**
+     * The client's token.
+     */
     token?: string;
+    /**
+     * The client's prefix.
+     */
     prefix?: string;
-    readyCallback?: () => void;
+    /**
+     * Debugging option.
+     */
     logging?: boolean;
+    /**
+     * Custom log header.
+     */
+    loggerHeader?: string;
+    /**
+     * Logger flags option.
+     */
+    loggerShowFlags?: boolean;
+    /**
+     * Directory to load command files.
+     */
     commandsPath?: string;
+    /**
+     * Directory to load event files.
+     */
     eventsPath?: string;
+    /**
+     * Connection string for Keyv.
+     */
+    connectionUri?: string;
+    /**
+     * Reponse when an error occurs.
+     */
+    errorResponse?: string;
+    /**
+     * Response when cooldown is not over.
+     */
+    cooldownResponse?: string;
+    /**
+     * Use default commands.
+     */
+    useDefault?: boolean;
+    /**
+     * Custom callback when client is ready.
+     */
+    readyCallback?: () => void;
 }
