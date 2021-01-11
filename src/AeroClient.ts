@@ -11,6 +11,11 @@ export default class AeroClient extends Client {
     private prefix: string;
     private logging: boolean;
 
+    /**
+     * Takes options and constructs a new AeroClient.
+     * @param options Options to customize the AeroClient.
+     * @param baseOptions Options for the regular trash client.
+     */
     constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
         super(baseOptions);
         this.prefix = options.prefix || "!";
@@ -18,6 +23,10 @@ export default class AeroClient extends Client {
         this.init(options);
     }
 
+    /**
+     * Private async method to initiate the client and start it up.
+     * @param options Options to customize the AeroClient.
+     */
     private async init(options: AeroClientOptions) {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadCommands(options.eventsPath);
@@ -28,6 +37,10 @@ export default class AeroClient extends Client {
         await this.login(options.token);
     }
 
+    /**
+     * Loads all commands in a folder, and subfolders.
+     * @param path Directory to load.
+     */
     public async loadCommands(path: string) {
         const directory = require.main?.path
             ? `${require.main.path}/${path}`
@@ -80,12 +93,16 @@ export default class AeroClient extends Client {
         await traverse(directory);
     }
 
+    /**
+     * Loads all events in a folder, and subfolders.
+     * @param path Path to load.
+     */
     public async loadEvents(path: string) {
         const directory = require.main?.path
             ? `${require.main.path}/${path}`
             : path;
 
-        const names = new Set<string>();
+        const names = new Set<string>(["ready", "message"]);
 
         const traverse = async (directory: string) => {
             const events = await readdir(directory);
@@ -121,6 +138,10 @@ export default class AeroClient extends Client {
         await traverse(directory);
     }
 
+    /**
+     * Helper method to register individual commands.
+     * @param command Command to register
+     */
     public registerCommand(command: Command) {
         this.commands.set(command.name, command);
     }
