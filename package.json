@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/aero-ware/aeroclient#readme",
   "dependencies": {
-    "discord.js": "^12.5.1"
+    "discord.js": "^12.5.1",
+    "typescript": "^4.1.3"
   }
 }
