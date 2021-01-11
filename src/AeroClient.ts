@@ -23,7 +23,7 @@ export default class AeroClient extends Client {
         if (options.eventsPath) await this.loadCommands(options.eventsPath);
         this.once(
             "ready",
-            options.readyCallback || (() => console.log("Ready!"))
+            options.readyCallback || (() => console.log("AeroClient is ready!"))
         );
         await this.login(options.token);
     }
