@@ -1,0 +1,27 @@
+{
+  "name": "@aeroware/aeroclient",
+  "version": "1.0.0",
+  "description": "advanced discord.js command handler framework with many extra utilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aero-ware/aeroclient.git"
+  },
+  "keywords": [
+    "discord.js",
+    "aeroware",
+    "command-handler"
+  ],
+  "author": "Dheeraj Prakash",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aero-ware/aeroclient/issues"
+  },
+  "homepage": "https://github.com/aero-ware/aeroclient#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
