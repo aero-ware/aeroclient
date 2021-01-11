@@ -42,6 +42,14 @@ export interface Command {
      */
     aliases?: string[];
     /**
+     * Cooldown for the command per each guild.
+     */
+    guildCooldown?: number;
+    /**
+     * Cooldown for the command in all situations.
+     */
+    globalCooldown?: number;
+    /**
      * The callback to execute.
      */
     callback: CommandCallback;
