@@ -12,7 +12,7 @@ const client = new AeroClient({
 
 client.registerCommand({
     name: "die",
-    cooldown: 30,
+    cooldown: 15,
     callback({ message }) {
         message.reply("no u");
     },

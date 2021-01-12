@@ -1,7 +1,7 @@
 import { readdir, stat } from "fs/promises";
 import { join } from "path";
-import AeroClient from "./AeroClient";
-import { EventHandler } from "./types";
+import AeroClient from "../AeroClient";
+import { EventHandler } from "../types";
 
 export default class Loader {
     private client: AeroClient;

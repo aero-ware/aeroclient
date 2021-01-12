@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import ms from "ms";
-import AeroClient from "./AeroClient";
+import AeroClient from "../AeroClient";
 
 export default function registerDefaults(client: AeroClient) {
     client.registerCommand({
