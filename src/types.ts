@@ -216,3 +216,8 @@ export interface AeroClientOptions {
      */
     readyCallback?: () => void;
 }
+
+/**
+ * All supported locales.
+ */
+export type Locales = "ar" | "en" | "fr" | "zh" | "de" | "pt" | "ru" | "es";

@@ -1,12 +1,7 @@
 import { readdir, readFile, stat } from "fs/promises";
 import { join } from "path";
 import AeroClient from "../AeroClient";
-import { EventHandler } from "../types";
-<<<<<<< HEAD
-=======
-import fs from "fs/promises";
-import { displayPartsToString } from "typescript";
->>>>>>> d7cd023b48a0a75bc417d96f4bd0ff7feef649c8
+import { EventHandler, Locales } from "../types";
 
 export default class Loader {
     private client: AeroClient;
@@ -141,39 +136,28 @@ export default class Loader {
      * @param dir the directory to read the locale files from
      */
     public async loadLanguages(dir: string) {
-<<<<<<< HEAD
-        const files = await readdir(`${require.main?.path}/${dir}`);
+        const path = `${require.main?.path}/${dir}`;
+        const files = await readdir(path, {
+            withFileTypes: true,
+        });
+
         const locales = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
+
         files.forEach(async (f) => {
             try {
-                const stats = await stat(f);
+                if (f.isFile() && f.name.endsWith("json")) {
+                    const name = f.name.slice(0, f.name.length - 5);
 
-                if (stats.isFile()) {
-                    let validFile: boolean = true;
-                    for (const l of locales) {
-                        validFile = f.includes(`${l}.json`);
-                        if (validFile) break;
-                    }
-                    if (validFile) this.client.locales[f] = JSON.parse(f);
+                    if (locales.includes(name))
+                        this.client.locales[name as Locales] = JSON.parse(
+                            await readFile(`${path}/${f.name}`, {
+                                encoding: "utf-8",
+                            })
+                        );
                 }
             } catch (e) {
                 this.client.logger.error(`Could not load ${f}`);
             }
         });
-=======
-        const files = await fs.readdir(`${require.main?.path}/${dir}`);
-        const locales = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
-        files.forEach(async f => {
-            const stat = await fs.stat(f);
-            if (stat.isFile()) {
-                let validFile: boolean = true;
-                for (const l of locales) {
-                    validFile = f.includes(`${l}.json`);
-                    if (validFile) break;
-                }
-                if (validFile) this.client.locales[f] = JSON.parse(f);
-            }
-        })
->>>>>>> d7cd023b48a0a75bc417d96f4bd0ff7feef649c8
     }
 }

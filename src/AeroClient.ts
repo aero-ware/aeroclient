@@ -6,7 +6,7 @@ import ms from "ms";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
-import { AeroClientOptions, Command, MiddlewareContext } from "./types";
+import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types";
 
 /**
  * The AeroClient extends the discord.js Client class to offer more features.
@@ -33,7 +33,14 @@ export default class AeroClient extends Client {
      * The keyv collection that matches user IDs to their preferred language.
      */
     public localeDB: Keyv<string>;
-    public locales!: any;
+    /**
+     * Object that stores locale-specific messages.
+     */
+    public locales: {
+        [locale in Locales]?: {
+            [key: string]: string;
+        };
+    } = {};
     private cooldowns = new Collection<string, Collection<string, number>>();
     private cooldownDB?: Keyv<string>;
     private loader = new Loader(this);
@@ -66,7 +73,7 @@ export default class AeroClient extends Client {
                 namespace: "cooldowns",
             });
 
-        this.localeDB = new Keyv<string>(options.connectionUri, { namespace: "language" });
+        this.localeDB = new Keyv<string>(options.connectionUri, { namespace: "locales" });
 
         if (options.useDefaults) registerDefaults(this);
     }
