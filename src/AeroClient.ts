@@ -60,8 +60,7 @@ export default class AeroClient extends Client {
 
         this.once(
             "ready",
-            options.readyCallback ||
-                (() => this.logger.success("AeroClient is ready!"))
+            options.readyCallback || (() => this.logger.success("AeroClient is ready!"))
         );
 
         this.on(
@@ -74,9 +73,7 @@ export default class AeroClient extends Client {
                           this.defaultPrefix
                         : this.clientOptions.prefix || this.defaultPrefix;
 
-                    const args = message.content
-                        .slice(prefix.length)
-                        .split(/\s+/g);
+                    const args = message.content.slice(prefix.length).split(/\s+/g);
 
                     await this.middlewares.execute({
                         message,
@@ -90,11 +87,7 @@ export default class AeroClient extends Client {
                     const command =
                         this.commands.get(commandName) ||
                         this.commands.find(
-                            (cmd) =>
-                                !!(
-                                    cmd.aliases &&
-                                    cmd.aliases.includes(commandName)
-                                )
+                            (cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName))
                         );
 
                     if (!command) return;
@@ -110,44 +103,35 @@ export default class AeroClient extends Client {
 
                         if (this.cooldownDB) {
                             const cooldownObj = JSON.parse(
-                                (await this.cooldownDB.get(command.name)) ||
-                                    "{}"
+                                (await this.cooldownDB.get(command.name)) || "{}"
                             );
 
-                            cooldownObj[message.author.id] =
-                                Date.now() + (command.cooldown || 0) * 1000;
+                            cooldownObj[message.author.id] = 0;
 
-                            await this.cooldownDB.set(
-                                command.name,
-                                JSON.stringify(cooldownObj)
-                            );
+                            await this.cooldownDB.set(command.name, JSON.stringify(cooldownObj));
                         }
                     }
 
                     const now = Date.now();
 
                     let timestamps = this.cooldownDB
-                        ? JSON.parse(
-                              (await this.cooldownDB.get(command.name)) || "{}"
-                          )
+                        ? JSON.parse((await this.cooldownDB.get(command.name)) || "{}")
                         : this.cooldowns.get(command.name);
 
                     const cooldownAmount = (command.cooldown || 0) * 1000;
 
                     if (!(timestamps instanceof Collection)) {
                         const tCollection = new Collection<string, number>();
-                        for (const k in timestamps)
-                            tCollection.set(k, timestamps[k]);
+                        for (const k in timestamps) tCollection.set(k, timestamps[k]);
                         timestamps = tCollection;
                     }
 
-                    if (timestamps!.has(message.author.id)) {
-                        const expirationTime =
-                            timestamps!.get(message.author.id)! +
-                            cooldownAmount;
+                    if (timestamps.has(message.author.id)) {
+                        const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
 
                         if (now < expirationTime) {
                             const timeLeft = expirationTime - now;
+
                             const msTime = ms(Math.round(timeLeft), {
                                 long: true,
                             });
@@ -179,31 +163,22 @@ export default class AeroClient extends Client {
                         ) {
                             timestamps!.set(message.author.id, now);
                             if (this.cooldownDB) {
-                                const cooldownObj = JSON.parse(await this.cooldownDB.get(command.name) || '{}');
+                                const cooldownObj = JSON.parse(
+                                    (await this.cooldownDB.get(command.name)) || "{}"
+                                );
 
-                                cooldownObj[message.author.id] =
-                                    Date.now() +
-                                    ((command.cooldown || 0) * 1000) / 2;
+                                cooldownObj[message.author.id] = now;
 
                                 await this.cooldownDB.set(
                                     command.name,
                                     JSON.stringify(cooldownObj)
                                 );
                             }
-                            setTimeout(
-                                () => timestamps!.delete(message.author.id),
-                                cooldownAmount
-                            );
                         }
                     } catch (err) {
                         console.error(err);
-                        if (
-                            this.clientOptions.responses &&
-                            this.clientOptions.responses.error
-                        )
-                            message.channel.send(
-                                this.clientOptions.responses.error
-                            );
+                        if (this.clientOptions.responses && this.clientOptions.responses.error)
+                            message.channel.send(this.clientOptions.responses.error);
                     }
 
                     return;

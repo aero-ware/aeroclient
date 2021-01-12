@@ -7,7 +7,7 @@ const client = new AeroClient({
     token: process.env.TOKEN,
     logging: true,
     useDefault: true,
-    persistentCooldowns: true,
+    // persistentCooldowns: true,
 });
 
 client.registerCommand({

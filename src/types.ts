@@ -131,7 +131,7 @@ export interface AeroClientOptions {
      */
     useDefault?: boolean;
     /**
-     * Store cooldowns in database to  be restart-safe **WORK IN PROGRESS**
+     * Store cooldowns in database to be persistent.
      */
     persistentCooldowns?: boolean;
     /**
