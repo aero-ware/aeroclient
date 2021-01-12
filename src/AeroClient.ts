@@ -115,8 +115,7 @@ export default class AeroClient extends Client {
                             );
 
                             cooldownObj[message.author.id] =
-                                Date.now() +
-                                ((command.cooldown || 0) * 1000) / 2;
+                                Date.now() + (command.cooldown || 0) * 1000;
 
                             await this.cooldownDB.set(
                                 command.name,
