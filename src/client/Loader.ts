@@ -1,4 +1,4 @@
-import { readdir, stat } from "fs/promises";
+import { readdir, readFile, stat } from "fs/promises";
 import { join } from "path";
 import AeroClient from "../AeroClient";
 import { EventHandler } from "../types";
@@ -15,9 +15,7 @@ export default class Loader {
      * @param path Directory to load.
      */
     public async loadCommands(path: string) {
-        const directory = require.main?.path
-            ? `${require.main.path}/${path}`
-            : path;
+        const directory = require.main?.path ? `${require.main.path}/${path}` : path;
 
         const names = new Set<string>();
 
@@ -36,9 +34,7 @@ export default class Loader {
 
                 if (!file.name) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `The command in the file '${command}' has no name`
-                        );
+                        this.client.logger.warn(`The command in the file '${command}' has no name`);
                     continue;
                 }
 
@@ -52,18 +48,14 @@ export default class Loader {
 
                 if (names.has(file.name)) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `Found duplicate command '${file.name}'`
-                        );
+                        this.client.logger.warn(`Found duplicate command '${file.name}'`);
                     continue;
                 }
 
                 this.client.commands.set(file.name, file);
 
                 if (this.client.clientOptions.logging)
-                    this.client.logger.info(
-                        `Loaded the '${file.name}' command!`
-                    );
+                    this.client.logger.info(`Loaded the '${file.name}' command!`);
             }
         };
 
@@ -71,9 +63,7 @@ export default class Loader {
     }
 
     public async loadEvents(path: string) {
-        const directory = require.main?.path
-            ? `${require.main.path}/${path}`
-            : path;
+        const directory = require.main?.path ? `${require.main.path}/${path}` : path;
 
         const names = new Set<string>();
 
@@ -92,18 +82,13 @@ export default class Loader {
 
                 if (names.has(file.name)) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `Found a duplicate event '${file.name}'`
-                        );
+                        this.client.logger.warn(`Found a duplicate event '${file.name}'`);
                     continue;
                 }
 
                 names.add(file.name);
 
-                this.client[file.once ? "once" : "on"](
-                    file.name,
-                    file.callback.bind(this)
-                );
+                this.client[file.once ? "once" : "on"](file.name, file.callback.bind(this));
 
                 if (this.client.clientOptions.logging)
                     this.client.logger.info(`Loaded the '${file.name}' event!`);
@@ -111,5 +96,27 @@ export default class Loader {
         };
 
         await traverse(directory);
+    }
+
+    public async loadMessages(path: string) {
+        const file = require.main?.path ? `${require.main.path}/${path}` : path;
+
+        const json = JSON.parse(
+            await readFile(file, {
+                encoding: "utf-8",
+            })
+        );
+
+        if (json.COOLDOWN_RESPONSE)
+            this.client.clientOptions.responses = {
+                ...this.client.clientOptions.responses,
+                cooldown: json.COOLDOWN_RESPONSE,
+            };
+
+        if (json.ERROR_RESPONSE)
+            this.client.clientOptions.responses = {
+                ...this.client.clientOptions.responses,
+                error: json.ERROR_RESPONSE,
+            };
     }
 }

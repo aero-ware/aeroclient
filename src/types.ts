@@ -123,13 +123,17 @@ export interface AeroClientOptions {
      */
     eventsPath?: string;
     /**
+     * Path to load the JSON with messages.
+     */
+    messagesPath?: string;
+    /**
      * Connection string for Keyv.
      */
     connectionUri?: string;
     /**
      * Use default commands.
      */
-    useDefault?: boolean;
+    useDefaults?: boolean;
     /**
      * Store cooldowns in database to be persistent.
      */

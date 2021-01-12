@@ -6,8 +6,16 @@ dotenv();
 const client = new AeroClient({
     token: process.env.TOKEN,
     logging: true,
-    useDefault: true,
-    // persistentCooldowns: true,
+    useDefaults: true,
+    persistentCooldowns: true,
+    messagesPath: "messages.json",
+});
+
+client.use(({ args, message }, next) => {
+    if (message.content.includes("fuck")) {
+        message.reply("since ur rude, im not executing that command");
+        next(true);
+    }
 });
 
 client.registerCommand({

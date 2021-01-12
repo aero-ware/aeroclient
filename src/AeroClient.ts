@@ -47,7 +47,7 @@ export default class AeroClient extends Client {
                 namespace: "cooldowns",
             });
 
-        if (options.useDefault) registerDefaults(this);
+        if (options.useDefaults) registerDefaults(this);
     }
 
     /**
@@ -57,6 +57,7 @@ export default class AeroClient extends Client {
     private async init(options: AeroClientOptions) {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadEvents(options.eventsPath);
+        if (options.messagesPath) await this.loadMessages(options.messagesPath);
 
         this.once(
             "ready",
@@ -75,10 +76,12 @@ export default class AeroClient extends Client {
 
                     const args = message.content.slice(prefix.length).split(/\s+/g);
 
-                    await this.middlewares.execute({
+                    const shouldStop = await this.middlewares.execute({
                         message,
                         args,
                     });
+
+                    if (shouldStop) return;
 
                     const commandName = args.shift();
 
@@ -143,10 +146,9 @@ export default class AeroClient extends Client {
                             return message.channel.send(
                                 this.clientOptions.responses &&
                                     this.clientOptions.responses.cooldown
-                                    ? this.clientOptions.responses.cooldown.replace(
-                                          "$TIME",
-                                          formattedTime
-                                      )
+                                    ? this.clientOptions.responses.cooldown
+                                          .replace("$TIME", formattedTime)
+                                          .replace("$COMMAND", command.name)
                                     : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
                             );
                         }
@@ -198,6 +200,10 @@ export default class AeroClient extends Client {
 
     public async loadEvents(directory: string) {
         await this.loader.loadEvents(directory);
+    }
+
+    public async loadMessages(directory: string) {
+        await this.loader.loadMessages(directory);
     }
 
     public registerCommand(command: Command) {
