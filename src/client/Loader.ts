@@ -6,6 +6,10 @@ import { EventHandler } from "../types";
 export default class Loader {
     private client: AeroClient;
 
+    /**
+     * Creates a Loder given a client.
+     * @param client the client that called this loader
+     */
     constructor(client: AeroClient) {
         this.client = client;
     }

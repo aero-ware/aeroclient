@@ -12,9 +12,21 @@ import { AeroClientOptions, Command, MiddlewareContext } from "./types";
  * The AeroClient extends the discord.js Client class to offer more features.
  */
 export default class AeroClient extends Client {
+    /**
+     * The commands that have been registered by AeroClient.
+     */
     public commands = new Collection<string, Command>();
+    /**
+     * The logger used to log events. See https://npmjs.com/package/@aeroware/logger.
+     */
     public logger: Logger;
+    /**
+     * The collection of guild prefixes saved by guild ID.
+     */
     public prefixes: Keyv<string>;
+    /**
+     * The options that were passed to the client via the constructor.
+     */
     public clientOptions: AeroClientOptions;
     private cooldowns = new Collection<string, Collection<string, number>>();
     private cooldownDB?: Keyv<string>;
@@ -27,7 +39,7 @@ export default class AeroClient extends Client {
      * @param options Options to customize the AeroClient.
      * @param baseOptions Options for the regular trash client.
      */
-    constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
+    public constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
         super(baseOptions);
 
         this.clientOptions = options;
@@ -226,10 +238,20 @@ export default class AeroClient extends Client {
         await this.login(options.token);
     }
 
+    /**
+     * Adds a midddleware into the client's middlware stack.
+     * @param middleware the middleware function to execute
+     */
     public use(middleware: Middleware<MiddlewareContext>) {
         this.middlewares.use(middleware);
     }
 
+    /**
+     * Creates a pagination with embeds and controlled by reactions.
+     * @param message the message that requested this pagination
+     * @param pages an array of embeds that will be shown to the user as a pagination
+     * @param options options for the pagination. see https://npmjs.com/package/@aeroware/discord-utils
+     */
     public paginate(
         message: Message,
         pages: MessageEmbed[],
@@ -238,18 +260,36 @@ export default class AeroClient extends Client {
         utils.paginate(message, pages, options);
     }
 
+    /**
+     * Loads commands from the specified directory.
+     * Note: To register an indiviudal command, use `registerCommand(command: Command)`
+     * @param directory the directory to load commands from
+     */
     public async loadCommands(directory: string) {
         await this.loader.loadCommands(directory);
     }
 
+    /**
+     * Loads events from the specified directory.
+     * @param directory the directory to load events from
+     */
     public async loadEvents(directory: string) {
         await this.loader.loadEvents(directory);
     }
 
+    /**
+     * Loads messages from the specified directory.
+     * @param directory the directory to load messages from
+     */
     public async loadMessages(directory: string) {
         await this.loader.loadMessages(directory);
     }
 
+    /**
+     * Registers a command.
+     * Note; To register a folder of commands, use `loadCommands(directory: string)`
+     * @param command the command to register
+     */
     public registerCommand(command: Command) {
         this.commands.set(command.name, command);
     }
