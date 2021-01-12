@@ -21,12 +21,21 @@ export interface EventHandler {
 }
 
 /**
+ * A middleware callback.
+ */
+export type MiddlewareContext = {
+    message: Message;
+    args: string[];
+};
+
+/**
  * Represents a command callback for execution of the command.
  */
 export type CommandCallback = (context: {
     message: Message;
     args: string[];
     client: AeroClient;
+    text: string;
 }) => unknown;
 
 /**
@@ -115,6 +124,10 @@ export interface AeroClientOptions {
      * Use default commands.
      */
     useDefault?: boolean;
+    /**
+     * Custom handler instead of default one.
+     */
+    customHandler?: (message: Message) => unknown;
     /**
      * Custom callback when client is ready.
      */
