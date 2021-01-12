@@ -13,11 +13,25 @@ It is fully customizable due to the many options and flags you can set. AeroClie
 -   Aliases
 -   Logger
 -   Persistable
+    -   Prefixes
+    -   Cooldowns
 -   Command handling
+    -   Many flags to choose and enable; some are listed below
+        -   `args` if arguments are required
+        -   `guildOnly` if the command can only be executed in a guild
+        -   `dmOnly` if the command can only be executed in a direct message
+    -   Automatic incorrect usage reply
 -   Automatic loading
     -   Events
     -   Commands
-    -   Custom responses
+    -   Custom responses; also listed below
+        -   `error` when an error occurs
+        -   `usage` when the usage is incorrect
+        -   `cooldown` when the cooldown is not over
 -   Cooldowns
 -   Default commands and behaviour
+    -   `setprefix` sets the prefix for the current guild
+    -   `help` simple help command
 -   Middleware
+    -   Stop command execution if needed
+    -   Customize AeroClient behaviour
