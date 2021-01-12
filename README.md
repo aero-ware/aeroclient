@@ -19,7 +19,7 @@ It is fully customizable due to the many options and flags you can set. AeroClie
     -   Many flags to choose and enable; some are listed below
         -   `args` if arguments are required
         -   `guildOnly` if the command can only be executed in a guild
-        -   `dmOnly` if the command can only be executed in a direct message
+        -   `hidden` if the command should be hidden from the help command
     -   Automatic incorrect usage reply
 -   Automatic loading
     -   Events

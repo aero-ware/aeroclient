@@ -26,6 +26,7 @@ export interface EventHandler {
 export type MiddlewareContext = {
     message: Message;
     args: string[];
+    command: Command;
 };
 
 /**
@@ -55,7 +56,7 @@ export interface Command {
      */
     category?: string;
     /**
-     * Are arguments required to execute the command.
+     * Are arguments required to execute the command?
      */
     args?: boolean;
     /**
@@ -70,6 +71,34 @@ export interface Command {
      * Description of the command.
      */
     description?: string;
+    /**
+     * A more thorough and longer description.
+     */
+    details?: string;
+    /**
+     * Can this command only be executed in a guild?
+     */
+    guildOnly?: boolean;
+    /**
+     * Can this command only be executed by bot staff?
+     */
+    staffOnly?: boolean;
+    /**
+     * Can this command only be executed in a direct message?
+     */
+    dmOnly?: boolean;
+    /**
+     * Can this command only be executed in NSFW channels?
+     */
+    nsfw?: boolean;
+    /**
+     * Should this be hidden from the default help command?
+     */
+    hidden?: boolean;
+    /**
+     * Should this command never be disabled?
+     */
+    guarded?: boolean;
     /**
      * The callback to execute.
      */
@@ -92,6 +121,26 @@ export type ResponseInfo = {
      * Response to send when the usage is incorrect.
      */
     usage?: string;
+    /**
+     * Reponse to send when an NSFW command is used in a SFW channel.
+     */
+    nsfw?: string;
+    /**
+     * Response to send when a guild only command is used in a direct message.
+     */
+    guild?: string;
+    /**
+     * Response to send when an attempt to disable a guarded command fails.
+     */
+    guarded?: string;
+    /**
+     * Response to send when a direct message only command is used in  a guild.
+     */
+    dm?: string;
+    /**
+     * Response to send when a non-staff user attempts to use a staff only command.
+     */
+    staff?: string;
 };
 
 /**
@@ -146,6 +195,10 @@ export interface AeroClientOptions {
      * Responses for the bot to use in standard situations.
      */
     responses?: ResponseInfo;
+    /**
+     * Array of ids of staff users.
+     */
+    staff?: string[];
     /**
      * Custom handler instead of default one.
      */

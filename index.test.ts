@@ -10,7 +10,7 @@ const client = new AeroClient({
     persistentCooldowns: true,
 });
 
-client.use(({ args, message }, next) => {
+client.use(({ args, message, command }, next) => {
     if (message.content.includes("fuck")) {
         message.reply("since ur rude, im not executing that command");
         next(true);

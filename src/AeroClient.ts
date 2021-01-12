@@ -76,13 +76,6 @@ export default class AeroClient extends Client {
 
                     const args = message.content.slice(prefix.length).split(/\s+/g);
 
-                    const shouldStop = await this.middlewares.execute({
-                        message,
-                        args,
-                    });
-
-                    if (shouldStop) return;
-
                     const commandName = args.shift();
 
                     if (!commandName) return;
@@ -94,6 +87,42 @@ export default class AeroClient extends Client {
                         );
 
                     if (!command) return;
+
+                    const shouldStop = await this.middlewares.execute({
+                        message,
+                        args,
+                        command,
+                    });
+
+                    if (shouldStop) return;
+
+                    if (command.guildOnly && !message.guild) {
+                        if (this.clientOptions.responses?.guild)
+                            message.channel.send(this.clientOptions.responses?.guild);
+                        return;
+                    }
+
+                    if (command.dmOnly && message.guild) {
+                        if (this.clientOptions.responses?.dm)
+                            message.channel.send(this.clientOptions.responses?.dm);
+                        return;
+                    }
+
+                    if (
+                        command.staffOnly &&
+                        this.clientOptions.staff &&
+                        this.clientOptions.staff.includes(message.author.id)
+                    ) {
+                        if (this.clientOptions.responses?.staff)
+                            message.channel.send(this.clientOptions.responses?.staff);
+                        return;
+                    }
+
+                    if (command.nsfw && message.channel.type !== "dm" && !message.channel.nsfw) {
+                        if (this.clientOptions.responses?.nsfw)
+                            message.channel.send(this.clientOptions.responses?.nsfw);
+                        return;
+                    }
 
                     if (command.args && !args.length) {
                         return message.channel.send(

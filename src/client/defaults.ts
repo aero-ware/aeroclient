@@ -8,15 +8,37 @@ export default function registerDefaults(client: AeroClient) {
         args: true,
         usage: "<prefix>",
         category: "utility",
+        cooldown: 1,
+        guarded: true,
+        guildOnly: true,
         async callback({ message, args, client }) {
             if (!message.guild) return;
 
+            if (!message.member?.hasPermission("ADMINISTRATOR"))
+                return message.channel.send("Sorry, you don't have permission.");
+
             client.prefixes.set(message.guild?.id, args[0]);
 
-            message.channel.send(
-                `:white_check_mark: Set the prefix to \`${args[0]}\``
-            );
+            return message.channel.send(`:white_check_mark: Set the prefix to \`${args[0]}\``);
         },
+    });
+
+    client.registerCommand({
+        name: "disable",
+        guildOnly: true,
+        args: true,
+        usage: "<command>",
+        category: "utility",
+        async callback({ message, args, client }) {},
+    });
+
+    client.registerCommand({
+        name: "enable",
+        guildOnly: true,
+        args: true,
+        usage: "<command>",
+        category: "utility",
+        async callback({ message, args, client }) {},
     });
 
     client.registerCommand({
@@ -24,18 +46,17 @@ export default function registerDefaults(client: AeroClient) {
         aliases: ["commands"],
         usage: "[command]",
         category: "utility",
+        cooldown: 1,
+        guarded: true,
         async callback({ message, args, client }) {
             const { commands } = client;
 
             const categories = new Set<string>();
 
-            commands.forEach((cmd) =>
-                cmd.category ? categories.add(cmd.category) : null
-            );
+            commands.forEach((cmd) => (cmd.category ? categories.add(cmd.category) : null));
 
             const prefix = message.guild
-                ? (await client.prefixes.get(message.guild?.id)) ||
-                  client.clientOptions.prefix
+                ? (await client.prefixes.get(message.guild?.id)) || client.clientOptions.prefix
                 : client.clientOptions.prefix;
 
             if (!args.length) {
@@ -51,7 +72,7 @@ export default function registerDefaults(client: AeroClient) {
                             Array.from(categories).map((cat) => ({
                                 name: cat.toLowerCase(),
                                 value: client.commands
-                                    .filter((cmd) => cmd.category === cat)
+                                    .filter((cmd) => cmd.category === cat && !cmd.hidden)
                                     .map((cmd) => `\`${cmd.name}\``)
                                     .join("\n"),
                                 inline: true,
@@ -60,9 +81,7 @@ export default function registerDefaults(client: AeroClient) {
                         .addField(
                             "uncategorized commands",
                             client.commands
-                                .filter(
-                                    (cmd) => typeof cmd.category === "undefined"
-                                )
+                                .filter((cmd) => typeof cmd.category === "undefined")
                                 .map((cmd) => `\`${cmd.name}\``)
                                 .join("\n")
                         )
@@ -84,20 +103,14 @@ export default function registerDefaults(client: AeroClient) {
                     .setTitle(`Info for ${command.name}`)
                     .addField(
                         "Aliases",
-                        command.aliases
-                            ? command.aliases.map((a) => `\`${a}\``).join("\n")
-                            : "None"
+                        command.aliases ? command.aliases.map((a) => `\`${a}\``).join("\n") : "None"
                     )
                     .addField("Description", command.description || "None")
-                    .addField(
-                        "Usage",
-                        `\`${prefix}${command.name} ${command.usage}\``
-                    )
+                    .addField("Details", command.details || "None")
+                    .addField("Usage", `\`${prefix}${command.name} ${command.usage}\``)
                     .addField(
                         "Category",
-                        command.category
-                            ? command.category.toLowerCase()
-                            : "None",
+                        command.category ? command.category.toLowerCase() : "None",
                         true
                     )
                     .addField(

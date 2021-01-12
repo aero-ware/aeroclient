@@ -62,6 +62,10 @@ export default class Loader {
         await traverse(directory);
     }
 
+    /**
+     * Loads all events in a folder, and subfolders.
+     * @param path Directory to load.
+     */
     public async loadEvents(path: string) {
         const directory = require.main?.path ? `${require.main.path}/${path}` : path;
 
@@ -98,6 +102,10 @@ export default class Loader {
         await traverse(directory);
     }
 
+    /**
+     * Loads responses from a JSON file.
+     * @param path Path to load the JSON (file extension must be included)
+     */
     public async loadMessages(path: string) {
         const file = require.main?.path ? `${require.main.path}/${path}` : path;
 
@@ -107,22 +115,15 @@ export default class Loader {
             })
         );
 
-        if (json.COOLDOWN_RESPONSE)
-            this.client.clientOptions.responses = {
-                ...this.client.clientOptions.responses,
-                cooldown: json.COOLDOWN_RESPONSE,
-            };
-
-        if (json.ERROR_RESPONSE)
-            this.client.clientOptions.responses = {
-                ...this.client.clientOptions.responses,
-                error: json.ERROR_RESPONSE,
-            };
-
-        if (json.USAGE_RESPONSE)
-            this.client.clientOptions.responses = {
-                ...this.client.clientOptions.responses,
-                usage: json.USAGE_RESPONSE,
-            };
+        ["cooldown", "error", "usage", "nsfw", "guild", "guarded", "dm", "staff"].forEach(
+            (flag) => {
+                const key = `${flag.toUpperCase()}_RESPONSE`;
+                if (json[key])
+                    this.client.clientOptions.responses = {
+                        ...this.client.clientOptions.responses,
+                        [flag]: json[key],
+                    };
+            }
+        );
     }
 }
