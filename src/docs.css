@@ -1,0 +1,38 @@
+.docs {
+    padding: 96px 2rem 2rem;
+    flex: 1;
+    max-width: 1200px;
+}
+
+.docs * {
+    font-weight: 300;
+}
+
+.docs a {
+    color: var(--clr-red);
+}
+
+.docs a:hover {
+    text-decoration: underline;
+}
+
+.docs h1,
+.docs h2,
+.docs h3 {
+    font-family: var(--ff-title);
+}
+
+.docs p {
+    line-height: 1.5;
+    margin: 1.5rem 0;
+}
+
+.docs h3 {
+    margin: 2rem 0;
+}
+
+@media (min-width: 900px) {
+    .docs {
+        padding-left: 325px;
+    }
+}

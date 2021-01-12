@@ -1,9 +1,13 @@
 .header {
+    z-index: 10;
+    position: fixed;
+    width: 100%;
     padding: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: var(--clr-black);
+    border-bottom: 1px solid var(--clr-red);
 }
 
 .logo-container {
@@ -15,6 +19,7 @@
     user-select: none;
     font-size: 2rem;
     font-family: "Aero";
+    color: var(--clr-white);
 }
 
 .nav {
