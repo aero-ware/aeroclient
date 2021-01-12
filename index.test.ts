@@ -7,10 +7,12 @@ const client = new AeroClient({
     token: process.env.TOKEN,
     logging: true,
     useDefault: true,
+    persistentCooldowns: true,
 });
 
 client.registerCommand({
     name: "die",
+    cooldown: 30,
     callback({ message }) {
         message.reply("no u");
     },

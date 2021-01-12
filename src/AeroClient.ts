@@ -1,4 +1,5 @@
 import Logger from "@aeroware/logger";
+import { add } from "date-fns";
 import { Client, ClientOptions, Collection } from "discord.js";
 import Keyv from "keyv";
 import ms from "ms";
@@ -13,9 +14,10 @@ import { AeroClientOptions, Command, MiddlewareContext } from "./types";
 export default class AeroClient extends Client {
     public commands = new Collection<string, Command>();
     public logger: Logger;
-    public prefixes: Keyv;
+    public prefixes: Keyv<string>;
     public clientOptions: AeroClientOptions;
     private cooldowns = new Collection<string, Collection<string, number>>();
+    private cooldownDB?: Keyv<string>;
     private loader = new Loader(this);
     private middlewares = Pipeline<MiddlewareContext>();
     private defaultPrefix = "!";
@@ -37,7 +39,9 @@ export default class AeroClient extends Client {
             options.loggerShowFlags || false
         );
 
-        this.prefixes = new Keyv(options.connectionUri);
+        this.prefixes = new Keyv<string>(options.connectionUri, { namespace: "prefixes" });
+
+        if (options.persistentCooldowns) this.cooldownDB = new Keyv<string>(options.connectionUri, { namespace: "coooldowns" });
 
         if (options.useDefault) registerDefaults(this);
     }
@@ -99,11 +103,26 @@ export default class AeroClient extends Client {
 
                     if (!this.cooldowns.has(command.name)) {
                         this.cooldowns.set(command.name, new Collection());
+
+                        if (this.cooldownDB) {
+                            const cooldownObj = JSON.parse(await this.cooldownDB.get(command.name) || '{}');
+
+                            cooldownObj[message.author.id] = add(new Date(), { seconds: command.cooldown });
+                            await this.cooldownDB.set(command.name, JSON.stringify(cooldownObj));
+                        }
                     }
 
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(command.name);
+                    let timestamps = this.cooldownDB ? JSON.parse(await this.cooldownDB.get(command.name) || '') : this.cooldowns.get(command.name);
                     const cooldownAmount = (command.cooldown || 0) * 1000;
+
+                    if (!(timestamps instanceof Collection)) {
+                        const tCollection = new Collection<string, number>();
+                        for (const k in timestamps) {
+                            tCollection.set(k, timestamps[k]);
+                        }
+                        timestamps = tCollection;
+                    }
 
                     if (timestamps!.has(message.author.id)) {
                         const expirationTime =
@@ -115,15 +134,14 @@ export default class AeroClient extends Client {
                             const msTime = ms(Math.round(timeLeft), {
                                 long: true,
                             });
+
                             const formattedTime = msTime.endsWith("ms")
                                 ? `${(timeLeft / 1000).toFixed(1)} seconds`
                                 : msTime;
+
                             return message.channel.send(
-                                this.clientOptions.cooldownResponse
-                                    ? this.clientOptions.cooldownResponse.replace(
-                                          "$TIME",
-                                          formattedTime
-                                      )
+                                this.clientOptions.responses && this.clientOptions.responses.cooldown ?
+                                    this.clientOptions.responses.cooldown.replace("$TIME", formattedTime)
                                     : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
                             );
                         }
@@ -146,9 +164,9 @@ export default class AeroClient extends Client {
                         }
                     } catch (err) {
                         console.error(err);
-                        if (this.clientOptions.errorResponse)
+                        if (this.clientOptions.responses && this.clientOptions.responses.error)
                             message.channel.send(
-                                this.clientOptions.errorResponse
+                                this.clientOptions.responses.error
                             );
                     }
 

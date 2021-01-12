@@ -77,6 +77,20 @@ export interface Command {
 }
 
 /**
+ * Stored responses for the bot for use in standard situations like an error or cooldown.
+ */
+export type ResponseInfo = {
+    /**
+     * Response to send when the command is in cooldown.
+     */
+    cooldown?: string;
+    /**
+     * Response to send when an error occurs.
+     */
+    error?: string;
+};
+
+/**
  * Options for the client.
  */
 export interface AeroClientOptions {
@@ -113,17 +127,17 @@ export interface AeroClientOptions {
      */
     connectionUri?: string;
     /**
-     * Reponse when an error occurs.
-     */
-    errorResponse?: string;
-    /**
-     * Response when cooldown is not over.
-     */
-    cooldownResponse?: string;
-    /**
      * Use default commands.
      */
     useDefault?: boolean;
+    /**
+     * Store cooldowns in database to  be restart-safe **WORK IN PROGRESS**
+     */
+    persistentCooldowns?: boolean;
+    /**
+     * Responses for the bot to use in standard situations.
+     */
+    responses?: ResponseInfo;
     /**
      * Custom handler instead of default one.
      */

@@ -1,4 +1,4 @@
-/**
+/*
  * TypeScript implementation of middleware.
  *
  * Author:
