@@ -2,7 +2,6 @@ import { readdir, readFile, stat } from "fs/promises";
 import { join } from "path";
 import AeroClient from "../AeroClient";
 import { EventHandler } from "../types";
-import fs from "fs";
 
 export default class Loader {
     private client: AeroClient;
@@ -137,12 +136,13 @@ export default class Loader {
      * @param dir the directory to read the locale files from
      */
     public async loadLanguages(dir: string) {
-        const files = fs.readdirSync(`${require.main?.path}/${dir}`);
+        const files = await readdir(`${require.main?.path}/${dir}`);
         const locales = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
-        files.forEach(f => {
-            fs.stat(f, (err, stat) => {
-                if (err) this.client.logger.error(err.stack!);
-                if (stat.isFile()) {
+        files.forEach(async (f) => {
+            try {
+                const stats = await stat(f);
+
+                if (stats.isFile()) {
                     let validFile: boolean = true;
                     for (const l of locales) {
                         validFile = f.includes(`${l}.json`);
@@ -150,7 +150,9 @@ export default class Loader {
                     }
                     if (validFile) this.client.locales[f] = JSON.parse(f);
                 }
-            })
-        })
+            } catch (e) {
+                this.client.logger.error(`Could not load ${f}`);
+            }
+        });
     }
 }
