@@ -137,15 +137,12 @@ export default class AeroClient extends Client {
                             message.channel.send(this.clientOptions.responses?.nsfw);
                         return;
                     }
-                    this.logger.info(
-                        `minArgs: ${command.minArgs}, maxArgs: ${command.maxArgs}, found: ${args.length}`
-                    );
+
                     if (
                         (command.args && !args.length) ||
                         (command.minArgs && command.minArgs > args.length) ||
                         (command.maxArgs && command.maxArgs < args.length)
                     ) {
-                        this.logger.warn("argument mismatch");
                         return message.channel.send(
                             this.clientOptions.responses?.usage
                                 ?.replace("$COMMAND", command.name)
@@ -154,7 +151,6 @@ export default class AeroClient extends Client {
                                 `The usage of \`${command.name}\` is \`${prefix}${command.name} ${command.usage}\`.`
                         );
                     }
-                    this.logger.error("continuing");
 
                     if (!this.cooldowns.has(command.name)) {
                         this.cooldowns.set(command.name, new Collection());
@@ -257,7 +253,8 @@ export default class AeroClient extends Client {
      * Creates a pagination with embeds and controlled by reactions.
      * @param message the message that requested this pagination
      * @param pages an array of embeds that will be shown to the user as a pagination
-     * @param options options for the pagination. see https://npmjs.com/package/@aeroware/discord-utils
+     * @param options options for the pagination.
+     * @see https://npmjs.com/package/@aeroware/discord-utils
      */
     public paginate(
         message: Message,
