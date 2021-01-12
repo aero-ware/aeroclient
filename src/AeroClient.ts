@@ -29,6 +29,11 @@ export default class AeroClient extends Client {
      * The options that were passed to the client via the constructor.
      */
     public clientOptions: AeroClientOptions;
+    /**
+     * The keyv collection that matches user IDs to their preferred language.
+     */
+    public localeDB: Keyv<string>;
+    public locales!: any;
     private cooldowns = new Collection<string, Collection<string, number>>();
     private cooldownDB?: Keyv<string>;
     private loader = new Loader(this);
@@ -61,6 +66,8 @@ export default class AeroClient extends Client {
                 namespace: "cooldowns",
             });
 
+        this.localeDB = new Keyv<string>(options.connectionUri, { namespace: "language" });
+
         if (options.useDefaults) registerDefaults(this);
     }
 
@@ -72,6 +79,7 @@ export default class AeroClient extends Client {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadEvents(options.eventsPath);
         if (options.messagesPath) await this.loadMessages(options.messagesPath);
+        if (options.languagesPath) await this.loadLanguages(options.languagesPath);
 
         this.once(
             "ready",
@@ -109,6 +117,12 @@ export default class AeroClient extends Client {
                     });
 
                     if (shouldStop) return;
+
+                    let responses: {};
+                    if (this.clientOptions.messagesPath) {
+                        const userLocale = await this.localeDB.get(message.author.id);
+                        // responses = this.loader.loadResponses(userLocale);
+                    }
 
                     if (command.guildOnly && !message.guild) {
                         if (this.clientOptions.responses?.guild)
@@ -287,6 +301,14 @@ export default class AeroClient extends Client {
      */
     public async loadMessages(directory: string) {
         await this.loader.loadMessages(directory);
+    }
+
+    /**
+     * Loads language JSONs from the specified directory.
+     * @param dir the directory to load languages from
+     */
+    public async loadLanguages(dir: string) {
+        await this.loader.loadLanguages(dir);
     }
 
     /**

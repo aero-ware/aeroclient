@@ -184,6 +184,10 @@ export interface AeroClientOptions {
      */
     messagesPath?: string;
     /**
+     * Directory to load JSON files from that correspond to languages.
+     */
+    languagesPath?: string;
+    /**
      * Connection string for Keyv.
      */
     connectionUri?: string;
