@@ -1,5 +1,6 @@
+import utils from "@aeroware/discord-utils";
 import Logger from "@aeroware/logger";
-import { Client, ClientOptions, Collection } from "discord.js";
+import { Client, ClientOptions, Collection, Message, MessageEmbed } from "discord.js";
 import Keyv from "keyv";
 import ms from "ms";
 import registerDefaults from "./client/defaults";
@@ -225,6 +226,14 @@ export default class AeroClient extends Client {
 
     public use(middleware: Middleware<MiddlewareContext>) {
         this.middlewares.use(middleware);
+    }
+
+    public paginate(
+        message: Message,
+        pages: MessageEmbed[],
+        options: Parameters<typeof utils.paginate>[2]
+    ) {
+        utils.paginate(message, pages, options);
     }
 
     public async loadCommands(directory: string) {

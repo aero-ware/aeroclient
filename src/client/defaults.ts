@@ -9,7 +9,6 @@ export default function registerDefaults(client: AeroClient) {
         usage: "<prefix>",
         category: "utility",
         cooldown: 1,
-        guarded: true,
         guildOnly: true,
         async callback({ message, args, client }) {
             if (!message.guild) return;
@@ -24,30 +23,11 @@ export default function registerDefaults(client: AeroClient) {
     });
 
     client.registerCommand({
-        name: "disable",
-        guildOnly: true,
-        args: true,
-        usage: "<command>",
-        category: "utility",
-        async callback({ message, args, client }) {},
-    });
-
-    client.registerCommand({
-        name: "enable",
-        guildOnly: true,
-        args: true,
-        usage: "<command>",
-        category: "utility",
-        async callback({ message, args, client }) {},
-    });
-
-    client.registerCommand({
         name: "help",
         aliases: ["commands"],
         usage: "[command]",
         category: "utility",
         cooldown: 1,
-        guarded: true,
         async callback({ message, args, client }) {
             const { commands } = client;
 

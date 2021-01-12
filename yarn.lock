@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@aeroware/discord-utils@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@aeroware/discord-utils/-/discord-utils-1.0.1.tgz#517e2145fd0466b7aa65b917dd2df967c559e71e"
+  integrity sha512-h+AwpD1gCpP3E8z0cVE6WtmkaUi3LOi1HLRyl/yZGxJtDF+yzuh2VrGOFdsI26iXo4t9kwypghcvlggLMOQVbw==
+  dependencies:
+    discord-parse-utils "^1.0.3"
+    discord.js "^12.5.1"
+
 "@aeroware/logger@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@aeroware/logger/-/logger-2.6.0.tgz#7d8a73c5915186d22e613b11c94659ab592293e5"
@@ -263,7 +271,14 @@ detect-libc@^1.0.2:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
-discord.js@^12.5.1:
+discord-parse-utils@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/discord-parse-utils/-/discord-parse-utils-1.0.3.tgz#9cc8eb6d8e34b6486ba2700e9135ea7db0983592"
+  integrity sha512-L9qktY4DVqkWaE5zoK0YEP4sdB7545l+uHoahclO+MPesA5NRNljpQTZucmhcB+h4Ts5qCWfZuRiiPEdBX8zZA==
+  dependencies:
+    discord.js "^12.4.1"
+
+discord.js@^12.4.1, discord.js@^12.5.1:
   version "12.5.1"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.5.1.tgz#992b45753e3815526a279914ccc281d3496f5990"
   integrity sha512-VwZkVaUAIOB9mKdca0I5MefPMTQJTNg0qdgi1huF3iwsFwJ0L5s/Y69AQe+iPmjuV6j9rtKoG0Ta0n9vgEIL6w==

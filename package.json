@@ -32,6 +32,7 @@
     },
     "homepage": "https://github.com/aero-ware/aeroclient#readme",
     "dependencies": {
+        "@aeroware/discord-utils": "^1.0.1",
         "@aeroware/logger": "^2.6.0",
         "@keyv/mongo": "^1.1.0",
         "@keyv/mysql": "^1.1.4",

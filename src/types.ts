@@ -96,10 +96,6 @@ export interface Command {
      */
     hidden?: boolean;
     /**
-     * Should this command never be disabled?
-     */
-    guarded?: boolean;
-    /**
      * The callback to execute.
      */
     callback: CommandCallback;
