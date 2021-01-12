@@ -17,7 +17,8 @@ export default class AeroClient extends Client {
      */
     public commands = new Collection<string, Command>();
     /**
-     * The logger used to log events. See https://npmjs.com/package/@aeroware/logger.
+     * The logger used to log events.
+     * @see https://npmjs.com/package/@aeroware/logger.
      */
     public logger: Logger;
     /**
@@ -136,9 +137,15 @@ export default class AeroClient extends Client {
                             message.channel.send(this.clientOptions.responses?.nsfw);
                         return;
                     }
-                    this.logger.info(`minArgs: ${command.minArgs}, maxArgs: ${command.maxArgs}, found: ${args.length}`);
-                    if ((command.args && !args.length) || (command.minArgs && command.minArgs > args.length) || (command.maxArgs && command.maxArgs < args.length)) {
-                        this.logger.warn("argument mismatch")
+                    this.logger.info(
+                        `minArgs: ${command.minArgs}, maxArgs: ${command.maxArgs}, found: ${args.length}`
+                    );
+                    if (
+                        (command.args && !args.length) ||
+                        (command.minArgs && command.minArgs > args.length) ||
+                        (command.maxArgs && command.maxArgs < args.length)
+                    ) {
+                        this.logger.warn("argument mismatch");
                         return message.channel.send(
                             this.clientOptions.responses?.usage
                                 ?.replace("$COMMAND", command.name)
