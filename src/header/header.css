@@ -1,0 +1,39 @@
+.header {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--clr-black);
+}
+
+.logo-container {
+    display: grid;
+    place-items: center;
+}
+
+.logo {
+    user-select: none;
+    font-size: 2rem;
+    font-family: "Aero";
+}
+
+.nav {
+    display: flex;
+    font-family: var(--ff-text);
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.nav a {
+    text-decoration: none;
+    transition: 0.3s ease filter;
+    margin: 0.25rem 1rem;
+}
+
+.nav a:hover {
+    filter: brightness(1.25);
+}
+
+i.fa-npm {
+    transform: scale(1.5);
+}
