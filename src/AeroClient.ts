@@ -178,6 +178,18 @@ export default class AeroClient extends Client {
                             })) !== "invalid"
                         ) {
                             timestamps!.set(message.author.id, now);
+                            if (this.cooldownDB) {
+                                const cooldownObj = JSON.parse(await this.cooldownDB.get(command.name) || '{}');
+
+                                cooldownObj[message.author.id] =
+                                    Date.now() +
+                                    ((command.cooldown || 0) * 1000) / 2;
+
+                                await this.cooldownDB.set(
+                                    command.name,
+                                    JSON.stringify(cooldownObj)
+                                );
+                            }
                             setTimeout(
                                 () => timestamps!.delete(message.author.id),
                                 cooldownAmount
