@@ -8,7 +8,6 @@ const client = new AeroClient({
     logging: true,
     useDefaults: true,
     persistentCooldowns: true,
-    messagesPath: "messages.json",
 });
 
 client.use(({ args, message }, next) => {

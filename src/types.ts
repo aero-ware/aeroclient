@@ -21,7 +21,7 @@ export interface EventHandler {
 }
 
 /**
- * A middleware callback.
+ * A middleware callback's context.
  */
 export type MiddlewareContext = {
     message: Message;
@@ -88,6 +88,10 @@ export type ResponseInfo = {
      * Response to send when an error occurs.
      */
     error?: string;
+    /**
+     * Response to send when the usage is incorrect.
+     */
+    usage?: string;
 };
 
 /**

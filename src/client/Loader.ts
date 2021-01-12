@@ -118,5 +118,11 @@ export default class Loader {
                 ...this.client.clientOptions.responses,
                 error: json.ERROR_RESPONSE,
             };
+
+        if (json.USAGE_RESPONSE)
+            this.client.clientOptions.responses = {
+                ...this.client.clientOptions.responses,
+                usage: json.USAGE_RESPONSE,
+            };
     }
 }

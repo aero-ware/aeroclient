@@ -97,7 +97,11 @@ export default class AeroClient extends Client {
 
                     if (command.args && !args.length) {
                         return message.channel.send(
-                            `The usage of \`${command.name}\` is \`${prefix}${command.name} ${command.usage}\`.`
+                            this.clientOptions.responses?.usage
+                                ?.replace("$COMMAND", command.name)
+                                .replace("$PREFIX", prefix)
+                                .replace("$USAGE", command.usage || "") ||
+                                `The usage of \`${command.name}\` is \`${prefix}${command.name} ${command.usage}\`.`
                         );
                     }
 
