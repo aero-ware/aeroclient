@@ -20,6 +20,9 @@ client.use(({ args, message, command }, next) => {
 client.registerCommand({
     name: "die",
     cooldown: 15,
+    args: true,
+    minArgs: 2,
+    maxArgs: 3,
     callback({ message }) {
         message.reply("no u");
     },

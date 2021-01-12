@@ -60,6 +60,14 @@ export interface Command {
      */
     args?: boolean;
     /**
+     * The minimum number of arguments required to run the command.
+     */
+    minArgs?: number;
+    /**
+     * The maximum number of arguments allowed for command execution.
+     */
+    maxArgs?: number;
+    /**
      * The command's usage.
      */
     usage?: string;
@@ -130,7 +138,7 @@ export type ResponseInfo = {
      */
     guarded?: string;
     /**
-     * Response to send when a direct message only command is used in  a guild.
+     * Response to send when a direct message only command is used in a guild.
      */
     dm?: string;
     /**
@@ -160,7 +168,7 @@ export interface AeroClientOptions {
      */
     loggerHeader?: string;
     /**
-     * Logger flags option.
+     * Logger flags option (if your console doesn't support colors).
      */
     loggerShowFlags?: boolean;
     /**
