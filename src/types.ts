@@ -1,4 +1,4 @@
-import { ClientEvents, Message } from "discord.js";
+import { ClientEvents, Message, PermissionString } from "discord.js";
 import AeroClient from ".";
 
 /**
@@ -96,6 +96,14 @@ export interface Command {
      */
     dmOnly?: boolean;
     /**
+     * Should this command be protected from disabling?
+     */
+    guarded?: boolean;
+    /**
+     * Permissions that GuildMembers must have to run this command. **DOES NOT APPLY IN DMs**
+     */
+    permissions?: PermissionString[];
+    /**
      * Can this command only be executed in NSFW channels?
      */
     nsfw?: boolean;
@@ -145,6 +153,14 @@ export type ResponseInfo = {
      * Response to send when a non-staff user attempts to use a staff only command.
      */
     staff?: string;
+    /**
+     * Response to send when someone tries to run a disabled command.
+     */
+    disabled?: string;
+    /**
+     * Response to send when someone has insufficient perms to run a command.
+     */
+    perms?: string;
 };
 
 /**

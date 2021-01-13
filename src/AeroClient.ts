@@ -1,6 +1,7 @@
 import utils from "@aeroware/discord-utils";
 import Logger from "@aeroware/logger";
 import { Client, ClientOptions, Collection, Message, MessageEmbed } from "discord.js";
+import parse from "discord-parse-utils";
 import Keyv from "keyv";
 import ms from "ms";
 import registerDefaults from "./client/defaults";
@@ -41,11 +42,18 @@ export default class AeroClient extends Client {
             [key: string]: string;
         };
     } = {};
+    /**
+     * The keyv collection that stores what commands are disabled in a guild.
+     */
+    public disabledCommands: Keyv<string>;
+    /**
+     * The default prefix for the bot. Used in DMs and in guilds where a custom prefix is not set.
+     */
+    public readonly defaultPrefix = "!";
     private cooldowns = new Collection<string, Collection<string, number>>();
     private cooldownDB?: Keyv<string>;
     private loader = new Loader(this);
     private middlewares = Pipeline<MiddlewareContext>();
-    private defaultPrefix = "!";
 
     /**
      * Takes options and constructs a new AeroClient.
@@ -75,6 +83,8 @@ export default class AeroClient extends Client {
 
         this.localeDB = new Keyv<string>(options.connectionUri, { namespace: "locales" });
 
+        this.disabledCommands = new Keyv<string>(options.connectionUri, { namespace: "disabled-commands" });
+
         if (options.useDefaults) registerDefaults(this);
     }
 
@@ -103,6 +113,8 @@ export default class AeroClient extends Client {
                           this.defaultPrefix
                         : this.clientOptions.prefix || this.defaultPrefix;
 
+                    if (message.author.bot || !message.content.startsWith(prefix)) return;
+
                     const args = message.content.slice(prefix.length).split(/\s+/g);
 
                     const commandName = args.shift();
@@ -125,11 +137,7 @@ export default class AeroClient extends Client {
 
                     if (shouldStop) return;
 
-                    let responses: {};
-                    if (this.clientOptions.messagesPath) {
-                        const userLocale = await this.localeDB.get(message.author.id);
-                        // responses = this.loader.loadResponses(userLocale);
-                    }
+                    const guildDisabledCommands = (await this.disabledCommands.get(message.guild?.id || "") || "").split(",");
 
                     if (command.guildOnly && !message.guild) {
                         if (this.clientOptions.responses?.guild)
@@ -143,6 +151,14 @@ export default class AeroClient extends Client {
                         return;
                     }
 
+                    if (guildDisabledCommands.includes(command.name)) {
+                        return message.channel.send(
+                            this.clientOptions.responses?.disabled ?
+                            this.clientOptions.responses.disabled
+                            : "This command is disabled."
+                        );
+                    }
+
                     if (
                         command.staffOnly &&
                         this.clientOptions.staff &&
@@ -151,6 +167,22 @@ export default class AeroClient extends Client {
                         if (this.clientOptions.responses?.staff)
                             message.channel.send(this.clientOptions.responses?.staff);
                         return;
+                    }
+
+                    let hasPermission = true;
+                    if (message.guild && command.permissions) {
+                        for (const perm of command.permissions) {
+                            if (!(message.member!.hasPermission(perm))) hasPermission = false;
+                            if (!hasPermission) break;
+                        }
+                    }
+                    if (!hasPermission) {
+                            return message.channel.send(
+                                (this.clientOptions.responses?.perms ?
+                                this.clientOptions.responses.perms
+                                : `You need to have \`$PERMS\` to run this command.`)
+                                    .replace("$PERMS", `\`${command.permissions!.map(p => parse.case(p)).join(',')}\``)
+                            );
                     }
 
                     if (command.nsfw && message.channel.type !== "dm" && !message.channel.nsfw) {
@@ -169,7 +201,7 @@ export default class AeroClient extends Client {
                                 ?.replace("$COMMAND", command.name)
                                 .replace("$PREFIX", prefix)
                                 .replace("$USAGE", command.usage || "") ||
-                                `The usage of \`${command.name}\` is \`${prefix}${command.name} ${command.usage}\`.`
+                                `The usage of \`${command.name}\` is \`${prefix}${command.name}${command.usage ? ` ${command.usage}` : ""}\`.`
                         );
                     }
 

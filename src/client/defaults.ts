@@ -14,6 +14,9 @@ export default function registerDefaults(client: AeroClient) {
         category: "utility",
         cooldown: 1,
         guildOnly: true,
+        description: "sets the prefix for this server.",
+        permissions: ["ADMINISTRATOR"],
+        guarded: true,
         async callback({ message, args, client }) {
             if (!message.guild) return;
 
@@ -30,7 +33,12 @@ export default function registerDefaults(client: AeroClient) {
         name: "setlocale",
         args: true,
         minArgs: 1,
-        async callback({ message, args }): Promise<any | void> {
+        usage: "<ar|en|fr|zh|pt|ru|es>",
+        category: "utility",
+        description: "sets your locale for the bot's responses to you",
+        details: "depending on your locale, the bot will respond to you in different languages.",
+        guarded: true,
+        async callback({ message, args }): Promise<any> {
             const locales: string[] = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
 
             if (!locales.includes(args[0].toLowerCase())) {
@@ -45,6 +53,9 @@ export default function registerDefaults(client: AeroClient) {
 
     client.registerCommand({
         name: "getlocale",
+        category: "utility",
+        cooldown: 5,
+        guarded: true,
         async callback({ message }) {
             const userLocale = await client.localeDB.get(message.author.id);
             message.reply(
@@ -58,11 +69,69 @@ export default function registerDefaults(client: AeroClient) {
     });
 
     client.registerCommand({
+        name: "disable",
+        minArgs: 1,
+        guildOnly: true,
+        category: "utility",
+        cooldown: 1,
+        usage: "<command name>",
+        guarded: true,
+        permissions: ["ADMINISTRATOR"],
+        async callback({ message, args }): Promise<any> {
+            const guildDisabledCommands = (await client.disabledCommands.get(message.guild!.id) || "").split(",");
+            let updated: boolean = false;
+            client.commands.forEach(async (c): Promise<any> => {
+                if (c.name.toLowerCase() === args[0].toLocaleLowerCase()) {
+                    if (!guildDisabledCommands.includes(c.name.toLowerCase())) {
+                        if (c.guarded) {
+                            return message.channel.send(
+                                client.clientOptions.responses?.guarded ?
+                                client.clientOptions.responses.guarded
+                                : "This command is guarded and cannot be disabled."
+                            );
+                        }
+                        guildDisabledCommands.push(c.name.toLowerCase());
+                        updated = true;
+                        return await client.disabledCommands.set(message.guild!.id, guildDisabledCommands.join(","));
+                    }
+                }
+            })
+            if (updated) return message.reply(`disabled command ${args[0].toLowerCase()} for this server.`);
+        }
+    })
+
+    client.registerCommand({
+        name: "enable",
+        minArgs: 1,
+        guildOnly: true,
+        category: "utility",
+        cooldown: 1,
+        usage: "<command name>",
+        guarded: true,
+        permissions: ["ADMINISTRATOR"],
+        async callback({ message, args }): Promise<any> {
+            let guildDisabledCommands = (await client.disabledCommands.get(message.guild!.id) || "").split(",");
+            let updated: boolean = false;
+            client.commands.forEach(async (c): Promise<any> => {
+                if (c.name.toLowerCase() === args[0].toLowerCase()) {
+                    if (guildDisabledCommands.includes(c.name.toLowerCase())) {
+                        guildDisabledCommands.splice(guildDisabledCommands.indexOf(c.name), 1);
+                        updated = true;
+                        return await client.disabledCommands.set(message.guild!.id, guildDisabledCommands.join(","));
+                    }
+                }
+            })
+            if (updated) return message.reply(`enabled command ${args[0].toLowerCase()} for this server.`);
+        }
+    })
+
+    client.registerCommand({
         name: "help",
         aliases: ["commands"],
         usage: "[command]",
         category: "utility",
         cooldown: 1,
+        guarded: true,
         async callback({ message, args, client }) {
             const { commands } = client;
 
@@ -71,8 +140,8 @@ export default function registerDefaults(client: AeroClient) {
             commands.forEach((cmd) => (cmd.category ? categories.add(cmd.category) : null));
 
             const prefix = message.guild
-                ? (await client.prefixes.get(message.guild?.id)) || client.clientOptions.prefix
-                : client.clientOptions.prefix;
+                ? (await client.prefixes.get(message.guild?.id)) || client.defaultPrefix
+                : client.defaultPrefix;
 
             if (!args.length) {
                 return message.channel.send(
@@ -122,7 +191,7 @@ export default function registerDefaults(client: AeroClient) {
                     )
                     .addField("Description", command.description || "None")
                     .addField("Details", command.details || "None")
-                    .addField("Usage", `\`${prefix}${command.name} ${command.usage}\``)
+                    .addField("Usage", `\`${prefix}${command.name}${command.usage ? " " + command.usage : ""}\``)
                     .addField(
                         "Category",
                         command.category ? command.category.toLowerCase() : "None",
