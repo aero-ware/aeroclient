@@ -35,6 +35,11 @@ export default class Loader {
                 }
 
                 const file = (await import(filePath)).default;
+                
+                if (typeof file === "function") {
+                    file(this);
+                    return;
+                }
 
                 if (!file.name) {
                     if (this.client.clientOptions.logging)
