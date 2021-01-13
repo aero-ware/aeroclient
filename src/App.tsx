@@ -276,6 +276,15 @@ new AeroClient(clientOptions, options);
                                     <li>
                                         <code>staff</code> – Response to send when a non-staff user attempts to use a staff only command
                                     </li>
+                                    <li>
+                                        <code>guarded</code> - Response to send when someone attempts to disable a guarded command
+                                    </li>
+                                    <li>
+                                        <code>disabled</code> - Response to send when someone attmempts to run a disabled command
+                                    </li>
+                                    <li>
+                                        <code>perms</code> - Response to send when someone attempts to run a command but doesn't have sufficient permissions
+                                    </li>
                                 </ul>
                                 <li>
                                     <code>staff</code> – Array of strings of staff ids
@@ -469,6 +478,12 @@ client.use(({ message }, next) => {
                                 <li>
                                     <code>hidden</code> – If the command should be hidden from the default help command
                                 </li>
+                                <li>
+                                    <code>guarded</code> - If the command should be protected from being disabled
+                                </li>
+                                <li>
+                                    <code>permissions</code> - Array of <a href="https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS">PermissionString</a> that contains the required permissions to run this command. Not checked if command is run in DMs.
+                                </li>
                             </ul>
                             <h4>Methods</h4>
                             <pre>
@@ -549,7 +564,7 @@ module.exports = {
 }
 `}</code>
                             </pre>
-                            <p>There are three properties. The name, whether if should execute once, and finally, the callback to execute.</p>
+                            <p>There are three properties. The name, whether it should execute once or every time it is emitted, and finally, the callback to execute.</p>
                             <h4 id="messages">Messages</h4>
                             <p>AeroClient allows you to configure response messages with a JSON file.</p>
                             <p>
@@ -564,6 +579,8 @@ module.exports = {
                                 For example, a JSON file with French translations would be named <code>fr.json</code>.
                                 <br />
                                 AeroClient will automatically load all support locales if you add the <code>languagesPath</code> option.
+                                <br />
+                                AeroClient supports the following locales: <code>ar, en, fr, zh, de, pt, ru, es</code>
                             </p>
                             <h3 id="logger">Logger</h3>
                             <p>
@@ -576,9 +593,9 @@ module.exports = {
                                 <code>{`\
 new Logger(header, showFlags)
 `}</code>
-                                <span className="red">@param</span> <code>header</code> – Custom header for the logger. Defaults to <code>logger</code>.
-                                <span className="red">@param</span> <code>showFlags</code> – Flag to show flags or not.
                             </pre>
+                                <span className="red">@param</span> <code>header</code> – Custom header for the logger. Defaults to <code>logger</code>.<br />
+                                <span className="red">@param</span> <code>showFlags</code> – Flag to show flags or not.
                             <h4 id="logger-methods">Methods</h4>
                             <pre>
                                 <code>{`\
