@@ -8,6 +8,10 @@
 AeroClient is a [discord.js](https://github.com/discordjs/discord.js) framework that focuses on customization.
 It is fully customizable due to the many options and flags you can set. AeroClient also features something new in discord.js frameworks: middleware.
 
+## Docs
+
+The docs for this framework can be found [here](https://www.aero-ware.github.io/aeroclient)
+
 ## Features
 
 -   Aliases
