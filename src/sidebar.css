@@ -7,6 +7,16 @@
     background-color: var(--clr-black);
     border-top: 1px solid var(--clr-red);
     overflow: scroll;
+    z-index: 10;
+}
+
+.sidebar-links a {
+    line-height: 1.5;
+    font-size: 1.5rem;
+}
+
+.t {
+    margin-left: 2rem;
 }
 
 .sidebar a {

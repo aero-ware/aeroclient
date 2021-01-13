@@ -1,5 +1,5 @@
 .docs {
-    padding: 96px 2rem 2rem;
+    padding: 96px 2rem 325px 2rem;
     flex: 1;
     max-width: 1200px;
 }
@@ -34,5 +34,6 @@
 @media (min-width: 900px) {
     .docs {
         padding-left: 325px;
+        padding-bottom: 2rem;
     }
 }
