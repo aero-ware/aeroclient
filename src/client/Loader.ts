@@ -135,7 +135,7 @@ export default class Loader {
      * Reads JSON files in the given directory to provide language support.
      * @param dir the directory to read the locale files from
      */
-    public async loadLanguages(dir: string) {
+    public async loadLocales(dir: string) {
         const path = `${require.main?.path}/${dir}`;
         const files = await readdir(path, {
             withFileTypes: true,

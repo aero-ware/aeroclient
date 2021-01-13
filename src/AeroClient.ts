@@ -86,7 +86,7 @@ export default class AeroClient extends Client {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadEvents(options.eventsPath);
         if (options.messagesPath) await this.loadMessages(options.messagesPath);
-        if (options.languagesPath) await this.loadLanguages(options.languagesPath);
+        if (options.languagesPath) await this.loadLocales(options.languagesPath);
 
         this.once(
             "ready",
@@ -314,8 +314,8 @@ export default class AeroClient extends Client {
      * Loads language JSONs from the specified directory.
      * @param dir the directory to load languages from
      */
-    public async loadLanguages(dir: string) {
-        await this.loader.loadLanguages(dir);
+    public async loadLocales(dir: string) {
+        await this.loader.loadLocales(dir);
     }
 
     /**
