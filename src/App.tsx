@@ -271,7 +271,7 @@ new AeroClient(clientOptions, options);
                                         <code>guild</code> – Response to send when a guild only command is used in a direct message
                                     </li>
                                     <li>
-                                        <code>dm</code> – Response to send when a dn only command is used in a guild
+                                        <code>dm</code> – Response to send when a direct message only command is used in a guild
                                     </li>
                                     <li>
                                         <code>staff</code> – Response to send when a non-staff user attempts to use a staff only command
