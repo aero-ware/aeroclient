@@ -7,12 +7,21 @@ pre {
     max-height: 500px;
     white-space: pre-wrap;
     tab-size: 4;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+pre::-webkit-scrollbar {
+    display: none;
 }
 
 pre code {
     color: #6fffe7;
     line-height: 1.5;
     font-size: calc(var(--fs-body) - 0.1rem);
+}
+
+code {
     font-family: var(--ff-code);
 }
 

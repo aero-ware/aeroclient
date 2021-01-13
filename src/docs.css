@@ -1,7 +1,15 @@
 .docs {
     padding: 96px 2rem 325px 2rem;
     flex: 1;
-    max-width: 1200px;
+    max-width: 1500px;
+}
+
+.docs ul li {
+    padding: 0.5rem 0;
+}
+
+.documentation h3 {
+    font-size: calc(var(--fs-h3) + 0.5rem);
 }
 
 .docs * {
@@ -18,7 +26,8 @@
 
 .docs h1,
 .docs h2,
-.docs h3 {
+.docs h3,
+.docs h4 {
     font-family: var(--ff-title);
 }
 
@@ -27,8 +36,16 @@
     margin: 1.5rem 0;
 }
 
-.docs h3 {
+.docs h2 {
     margin: 2rem 0;
+}
+
+.docs h3 {
+    margin: 1.5rem 0;
+}
+
+.docs h4 {
+    margin: 1.25rem 0;
 }
 
 @media (min-width: 900px) {

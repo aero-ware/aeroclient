@@ -23,6 +23,7 @@ html {
     --fs-h1: 2.5rem;
     --fs-h2: 2.15rem;
     --fs-h3: 1.4rem;
+    --fs-h4: 1.3rem;
     --fs-body: 1.1rem;
 
     height: 100vh;
@@ -30,6 +31,8 @@ html {
     overflow-x: hidden;
 
     overscroll-behavior: none;
+
+    scroll-behavior: smooth;
 }
 
 body {
@@ -53,7 +56,8 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
     line-height: 1.2;
     margin: 0;
 }
@@ -70,11 +74,16 @@ h3 {
     font-size: var(--fs-h3);
 }
 
+h4 {
+    font-size: var(--fs-h4);
+}
+
 @media (min-width: 800px) {
     :root {
         --fs-h1: 3rem;
         --fs-h2: 2.4rem;
         --fs-h3: 1.6rem;
+        --fs-h4: 1.45rem;
         --fs-body: 1.25rem;
     }
 }
@@ -84,6 +93,7 @@ h3 {
         --fs-h1: 3.65rem;
         --fs-h2: 3rem;
         --fs-h3: 1.9rem;
+        --fs-h4: 1.75rem;
         --fs-body: 1.35rem;
     }
 }
@@ -93,6 +103,7 @@ h3 {
         --fs-h1: 4.15rem;
         --fs-h2: 3.4rem;
         --fs-h3: 2.1rem;
+        --fs-h4: 1.85rem;
         --fs-body: 1.4rem;
     }
 }
@@ -102,6 +113,7 @@ h3 {
         --fs-h1: 4.25rem;
         --fs-h2: 3.5rem;
         --fs-h3: 2.25rem;
+        --fs-h4: 1.9rem;
         --fs-body: 1.45rem;
     }
 }
@@ -111,6 +123,7 @@ h3 {
         --fs-h1: 5rem;
         --fs-h2: 3.65rem;
         --fs-h3: 2.3rem;
+        --fs-h4: 2rem;
         --fs-body: 1.5rem;
     }
 }
