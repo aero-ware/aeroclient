@@ -33,7 +33,7 @@ export default class AeroClient extends Client {
     /**
      * The keyv collection that matches user IDs to their preferred language.
      */
-    public localeDB: Keyv<string>;
+    public localeStore: Keyv<string>;
     /**
      * Object that stores locale-specific messages.
      */
@@ -81,7 +81,7 @@ export default class AeroClient extends Client {
                 namespace: "cooldowns",
             });
 
-        this.localeDB = new Keyv<string>(options.connectionUri, { namespace: "locales" });
+        this.localeStore = new Keyv<string>(options.connectionUri, { namespace: "locales" });
 
         this.disabledCommands = new Keyv<string>(options.connectionUri, { namespace: "disabled-commands" });
 

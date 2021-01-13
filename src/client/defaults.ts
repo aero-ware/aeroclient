@@ -46,7 +46,7 @@ export default function registerDefaults(client: AeroClient) {
                     `invalid locale. the valid locales are: \`${locales.join(", ")}\``
                 );
             }
-            await client.localeDB.set(message.author.id, args[0]);
+            await client.localeStore.set(message.author.id, args[0]);
             message.reply(`set your preferred locale to ${args[0]}`);
         },
     });
@@ -57,10 +57,10 @@ export default function registerDefaults(client: AeroClient) {
         cooldown: 5,
         guarded: true,
         async callback({ message }) {
-            const userLocale = await client.localeDB.get(message.author.id);
+            const userLocale = await client.localeStore.get(message.author.id);
             message.reply(
                 userLocale
-                    ? `your locale is set to: \`${await client.localeDB.get(message.author.id)}\`.`
+                    ? `your locale is set to: \`${await client.localeStore.get(message.author.id)}\`.`
                     : `you don't have a locale set. use \`${
                           (await client.prefixes.get(message.guild ? message.guild.id : "")) || "!"
                       }setlocale <locale>\` to set your locale.`
