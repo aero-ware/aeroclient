@@ -264,6 +264,7 @@ export default class AeroClient extends Client {
      */
     public use(middleware: Middleware<MiddlewareContext>) {
         this.middlewares.use(middleware);
+        return this;
     }
 
     /**
@@ -275,6 +276,7 @@ export default class AeroClient extends Client {
      */
     public paginate(message: Message, pages: MessageEmbed[], options: Parameters<typeof utils.paginate>[2]) {
         utils.paginate(message, pages, options);
+        return this;
     }
 
     /**
@@ -284,6 +286,7 @@ export default class AeroClient extends Client {
      */
     public async loadCommands(directory: string) {
         await this.loader.loadCommands(directory);
+        return this;
     }
 
     /**
@@ -292,6 +295,7 @@ export default class AeroClient extends Client {
      */
     public async loadEvents(directory: string) {
         await this.loader.loadEvents(directory);
+        return this;
     }
 
     /**
@@ -300,6 +304,7 @@ export default class AeroClient extends Client {
      */
     public async loadMessages(directory: string) {
         await this.loader.loadMessages(directory);
+        return this;
     }
 
     /**
@@ -308,6 +313,7 @@ export default class AeroClient extends Client {
      */
     public async loadLocales(dir: string) {
         await this.loader.loadLocales(dir);
+        return this;
     }
 
     /**
@@ -317,5 +323,6 @@ export default class AeroClient extends Client {
      */
     public registerCommand(command: Command) {
         this.commands.set(command.name, command);
+        return this;
     }
 }
