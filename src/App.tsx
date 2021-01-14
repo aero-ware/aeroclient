@@ -418,7 +418,11 @@ client.use(({ message }, next) => {
 });
 `}</code>
                             </pre>
-                            <p>The context object has three properties. The message, the arguments for the command, and the command object itself.</p>
+                            <p>
+                                The context object has three properties. The message, the arguments for the command, and the command object itself.
+                                <br />
+                                Note that in the event that a command is not found, <code>command</code> will be undefined.
+                            </p>
                             <p>
                                 Calling the next function without any parameters will allow other middleware to execute, like express.
                                 <br />
@@ -482,7 +486,9 @@ client.use(({ message }, next) => {
                                     <code>guarded</code> - If the command should be protected from being disabled
                                 </li>
                                 <li>
-                                    <code>permissions</code> - Array of <a href="https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS">PermissionString</a> that contains the required permissions to run this command. Not checked if command is run in DMs.
+                                    <code>permissions</code> - Array of{" "}
+                                    <a href="https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS">PermissionString</a> that contains
+                                    the required permissions to run this command. Not checked if command is run in DMs.
                                 </li>
                             </ul>
                             <h4>Methods</h4>
@@ -564,7 +570,10 @@ module.exports = {
 }
 `}</code>
                             </pre>
-                            <p>There are three properties. The name, whether it should execute once or every time it is emitted, and finally, the callback to execute.</p>
+                            <p>
+                                There are three properties. The name, whether it should execute once or every time it is emitted, and finally, the callback to
+                                execute.
+                            </p>
                             <h4 id="messages">Messages</h4>
                             <p>AeroClient allows you to configure response messages with a JSON file.</p>
                             <p>
@@ -594,8 +603,8 @@ module.exports = {
 new Logger(header, showFlags)
 `}</code>
                             </pre>
-                                <span className="red">@param</span> <code>header</code> – Custom header for the logger. Defaults to <code>logger</code>.<br />
-                                <span className="red">@param</span> <code>showFlags</code> – Flag to show flags or not.
+                            <span className="red">@param</span> <code>header</code> – Custom header for the logger. Defaults to <code>logger</code>.<br />
+                            <span className="red">@param</span> <code>showFlags</code> – Flag to show flags or not.
                             <h4 id="logger-methods">Methods</h4>
                             <pre>
                                 <code>{`\
@@ -639,6 +648,7 @@ error(message)
                             <h4 id="input">Input</h4>
                             <h4 id="parsing">Parsing</h4>
                             <h4 id="timing">Timing</h4>
+                            <h3 id="stopwatch">The Stopwatch class</h3>
                             <h4 id="pagination">Pagination</h4>
                         </div>
                         <div
