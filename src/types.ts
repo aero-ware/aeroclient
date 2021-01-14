@@ -26,7 +26,7 @@ export interface EventHandler {
 export type MiddlewareContext = {
     message: Message;
     args: string[];
-    command: Command;
+    command?: Command;
 };
 
 /**

@@ -101,21 +101,18 @@ export default class AeroClient extends Client {
             "message",
             this.clientOptions.customHandler ||
                 (async (message) => {
+                    if (message.author.bot) return;
+
                     const prefix = message.guild
                         ? (await this.prefixes.get(message.guild?.id)) || this.clientOptions.prefix || this.defaultPrefix
                         : this.clientOptions.prefix || this.defaultPrefix;
-
-                    if (message.author.bot || !message.content.startsWith(prefix)) return;
 
                     const args = message.content.slice(prefix.length).split(/\s+/g);
 
                     const commandName = args.shift();
 
-                    if (!commandName) return;
-
-                    const command = this.commands.get(commandName) || this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName)));
-
-                    if (!command) return;
+                    const command =
+                        this.commands.get(commandName || "") || this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")));
 
                     const shouldStop = await this.middlewares.execute({
                         message,
@@ -124,6 +121,10 @@ export default class AeroClient extends Client {
                     });
 
                     if (shouldStop) return;
+
+                    if (!message.content.startsWith(prefix)) return;
+
+                    if (!command) return;
 
                     const guildDisabledCommands = ((await this.disabledCommands.get(message.guild?.id || "")) || "").split(",");
 
