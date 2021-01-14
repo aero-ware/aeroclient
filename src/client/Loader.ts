@@ -38,7 +38,7 @@ export default class Loader {
 
                 if (typeof file === "function") {
                     file(this);
-                    return;
+                    continue;
                 }
 
                 if (!file.name) {

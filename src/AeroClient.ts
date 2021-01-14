@@ -234,6 +234,7 @@ export default class AeroClient extends Client {
                                 args,
                                 client: this,
                                 text: message.content,
+                                locale: (await this.localeStore.get(message.author.id)) || "en",
                             })) !== "invalid"
                         ) {
                             timestamps!.set(message.author.id, now);
@@ -263,6 +264,7 @@ export default class AeroClient extends Client {
      */
     public use(middleware: Middleware<MiddlewareContext>) {
         this.middlewares.use(middleware);
+        this.emit("middlewareAdd");
         return this;
     }
 
@@ -285,6 +287,7 @@ export default class AeroClient extends Client {
      */
     public async loadCommands(directory: string) {
         await this.loader.loadCommands(directory);
+        this.emit("commandsLoaded");
         return this;
     }
 
@@ -294,6 +297,7 @@ export default class AeroClient extends Client {
      */
     public async loadEvents(directory: string) {
         await this.loader.loadEvents(directory);
+        this.emit("eventsLoaded");
         return this;
     }
 
@@ -303,6 +307,7 @@ export default class AeroClient extends Client {
      */
     public async loadMessages(directory: string) {
         await this.loader.loadMessages(directory);
+        this.emit("messagesLoaded");
         return this;
     }
 
@@ -312,6 +317,7 @@ export default class AeroClient extends Client {
      */
     public async loadLocales(dir: string) {
         await this.loader.loadLocales(dir);
+        this.emit("localesLoaded");
         return this;
     }
 

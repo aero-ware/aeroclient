@@ -32,7 +32,7 @@ export type MiddlewareContext = {
 /**
  * Represents a command callback for execution of the command.
  */
-export type CommandCallback = (context: { message: Message; args: string[]; client: AeroClient; text: string }) => unknown;
+export type CommandCallback = (context: { message: Message; args: string[]; client: AeroClient; text: string; locale: string }) => unknown;
 
 /**
  * A command that the client will load.
