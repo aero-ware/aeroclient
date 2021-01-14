@@ -20,6 +20,12 @@ export default function registerDefaults(client: AeroClient) {
         async callback({ message, args, client }) {
             if (!message.guild) return;
 
+            const prefix = message.guild
+                ? (await client.prefixes.get(message.guild?.id)) || client.clientOptions.prefix || client.defaultPrefix
+                : client.clientOptions.prefix || client.defaultPrefix;
+
+            if (!args[0]) return message.channel.send(`The server's prefix is \`${prefix}\`.`);
+
             if (!message.member?.hasPermission("ADMINISTRATOR")) return message.channel.send("Sorry, you don't have permission.");
 
             client.prefixes.set(message.guild?.id, args[0]);
@@ -30,38 +36,34 @@ export default function registerDefaults(client: AeroClient) {
 
     client.registerCommand({
         name: "setlocale",
-        args: true,
+        args: false,
         minArgs: 1,
-        usage: "<ar|en|fr|zh|pt|ru|es>",
+        usage: "[ar|en|fr|zh|pt|ru|es]",
         category: "utility",
         description: "sets your locale for the bot's responses to you",
         details: "depending on your locale, the bot will respond to you in different languages.",
         guarded: true,
         async callback({ message, args }): Promise<any> {
-            const locales: string[] = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
+            if (!args[0]) {
+                const userLocale = await client.localeStore.get(message.author.id);
+
+                return message.channel.send(
+                    userLocale
+                        ? `Your locale is set to: \`${await client.localeStore.get(message.author.id)}\`.`
+                        : `You don't have a locale set. Use \`${
+                              (await client.prefixes.get(message.guild ? message.guild.id : "")) || "!"
+                          }setlocale <locale>\` to set your locale.`
+                );
+            }
+
+            const locales = ["ar", "en", "fr", "zh", "de", "pt", "ru", "es"];
 
             if (!locales.includes(args[0].toLowerCase())) {
-                return message.reply(`invalid locale. the valid locales are: \`${locales.join(", ")}\``);
+                return message.channel.send(`Invalid locale. The supported locales are ${locales.join(", ")}`);
             }
-            await client.localeStore.set(message.author.id, args[0]);
-            message.reply(`set your preferred locale to ${args[0]}`);
-        },
-    });
 
-    client.registerCommand({
-        name: "getlocale",
-        category: "utility",
-        cooldown: 5,
-        guarded: true,
-        async callback({ message }) {
-            const userLocale = await client.localeStore.get(message.author.id);
-            message.reply(
-                userLocale
-                    ? `your locale is set to: \`${await client.localeStore.get(message.author.id)}\`.`
-                    : `you don't have a locale set. use \`${
-                          (await client.prefixes.get(message.guild ? message.guild.id : "")) || "!"
-                      }setlocale <locale>\` to set your locale.`
-            );
+            await client.localeStore.set(message.author.id, args[0]);
+            message.channel.send(`:white_checl_mark: Set your preferred locale to \`${args[0]}\``);
         },
     });
 
@@ -95,7 +97,7 @@ export default function registerDefaults(client: AeroClient) {
                     }
                 }
             );
-            if (updated) return message.reply(`disabled command ${args[0].toLowerCase()} for this server.`);
+            if (updated) return message.channel.send(`:white_check_mark: Disabled command \`${args[0].toLowerCase()}\` for this server.`);
         },
     });
 
@@ -122,7 +124,7 @@ export default function registerDefaults(client: AeroClient) {
                     }
                 }
             );
-            if (updated) return message.reply(`enabled command ${args[0].toLowerCase()} for this server.`);
+            if (updated) return message.channel.send(`:white_check_mark: Enabled command \`${args[0].toLowerCase()}\` for this server.`);
         },
     });
 
@@ -140,7 +142,9 @@ export default function registerDefaults(client: AeroClient) {
 
             commands.forEach((cmd) => (cmd.category ? categories.add(cmd.category) : null));
 
-            const prefix = message.guild ? (await client.prefixes.get(message.guild?.id)) || client.defaultPrefix : client.defaultPrefix;
+            const prefix = message.guild
+                ? (await client.prefixes.get(message.guild?.id)) || client.clientOptions.prefix || client.defaultPrefix
+                : client.clientOptions.prefix || client.defaultPrefix;
 
             const uncategorized = client.commands
                 .filter((cmd) => typeof cmd.category === "undefined")
