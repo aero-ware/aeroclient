@@ -51,7 +51,7 @@ export default class AeroClient extends Client {
      */
     public readonly defaultPrefix = "!";
     private cooldowns = new Collection<string, Collection<string, number>>();
-    private cooldownDB?: Keyv<string>;
+    private cooldownStore?: Keyv<string>;
     private loader = new Loader(this);
     private middlewares = Pipeline<MiddlewareContext>();
 
@@ -74,7 +74,7 @@ export default class AeroClient extends Client {
         });
 
         if (options.persistentCooldowns)
-            this.cooldownDB = new Keyv<string>(options.connectionUri, {
+            this.cooldownStore = new Keyv<string>(options.connectionUri, {
                 namespace: "cooldowns",
             });
 
@@ -149,21 +149,20 @@ export default class AeroClient extends Client {
 
                     let hasPermission = true;
 
-                    if (message.guild && command.permissions) {
-                        for (const perm of command.permissions) {
-                            if (!message.member!.hasPermission(perm)) hasPermission = false;
-                            if (!hasPermission) break;
-                        }
-                    }
+                    if (message.guild && command.permissions)
+                        for (const perm of command.permissions)
+                            if (!message.member!.hasPermission(perm)) {
+                                hasPermission = false;
+                                break;
+                            }
 
-                    if (!hasPermission) {
+                    if (!hasPermission)
                         return message.channel.send(
                             (this.clientOptions.responses?.perms
                                 ? this.clientOptions.responses.perms
                                 : `You need to have \`$PERMS\` to run this command.`
                             ).replace("$PERMS", `\`${command.permissions!.map((p) => parse.case(p)).join(", ")}\``)
                         );
-                    }
 
                     if (command.nsfw && message.channel.type !== "dm" && !message.channel.nsfw) {
                         if (this.clientOptions.responses?.nsfw) message.channel.send(this.clientOptions.responses?.nsfw);
@@ -187,18 +186,18 @@ export default class AeroClient extends Client {
                     if (!this.cooldowns.has(command.name)) {
                         this.cooldowns.set(command.name, new Collection());
 
-                        if (this.cooldownDB) {
-                            const cooldownObj = JSON.parse((await this.cooldownDB.get(command.name)) || "{}");
+                        if (this.cooldownStore) {
+                            const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
                             cooldownObj[message.author.id] = 0;
 
-                            await this.cooldownDB.set(command.name, JSON.stringify(cooldownObj));
+                            await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
                         }
                     }
 
                     const now = Date.now();
 
-                    let timestamps = this.cooldownDB ? JSON.parse((await this.cooldownDB.get(command.name)) || "{}") : this.cooldowns.get(command.name);
+                    let timestamps = this.cooldownStore ? JSON.parse((await this.cooldownStore.get(command.name)) || "{}") : this.cooldowns.get(command.name);
 
                     const cooldownAmount = (command.cooldown || 0) * 1000;
 
@@ -238,12 +237,12 @@ export default class AeroClient extends Client {
                             })) !== "invalid"
                         ) {
                             timestamps!.set(message.author.id, now);
-                            if (this.cooldownDB) {
-                                const cooldownObj = JSON.parse((await this.cooldownDB.get(command.name)) || "{}");
+                            if (this.cooldownStore) {
+                                const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
                                 cooldownObj[message.author.id] = now;
 
-                                await this.cooldownDB.set(command.name, JSON.stringify(cooldownObj));
+                                await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
                             }
                         }
                     } catch (err) {
