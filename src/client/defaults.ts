@@ -142,6 +142,28 @@ export default function registerDefaults(client: AeroClient) {
 
             const prefix = message.guild ? (await client.prefixes.get(message.guild?.id)) || client.defaultPrefix : client.defaultPrefix;
 
+            const uncategorized = client.commands
+                .filter((cmd) => typeof cmd.category === "undefined")
+                .map((cmd) => `\`${cmd.name}\``)
+                .join("\n");
+
+            const fields = Array.from(categories).map((cat) => ({
+                name: cat.toLowerCase(),
+                value:
+                    client.commands
+                        .filter((cmd) => cmd.category === cat && !cmd.hidden)
+                        .map((cmd) => `\`${cmd.name}\``)
+                        .join("\n") || "None",
+                inline: true,
+            }));
+
+            if (uncategorized)
+                fields.push({
+                    name: "uncategorized",
+                    value: uncategorized,
+                    inline: true,
+                });
+
             if (!args.length) {
                 return message.channel.send(
                     new MessageEmbed()
@@ -149,24 +171,7 @@ export default function registerDefaults(client: AeroClient) {
                         .setColor("RANDOM")
                         .setDescription(`Use \`${prefix}help <command>\` for info on a specific command!`)
                         .setTimestamp(message.createdAt)
-                        .addFields(
-                            Array.from(categories).map((cat) => ({
-                                name: cat.toLowerCase(),
-                                value:
-                                    client.commands
-                                        .filter((cmd) => cmd.category === cat && !cmd.hidden)
-                                        .map((cmd) => `\`${cmd.name}\``)
-                                        .join("\n") || "None",
-                                inline: true,
-                            }))
-                        )
-                        .addField(
-                            "uncategorized commands",
-                            client.commands
-                                .filter((cmd) => typeof cmd.category === "undefined")
-                                .map((cmd) => `\`${cmd.name}\``)
-                                .join("\n")
-                        )
+                        .addFields(fields)
                 );
             }
 
