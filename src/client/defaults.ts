@@ -152,10 +152,11 @@ export default function registerDefaults(client: AeroClient) {
                         .addFields(
                             Array.from(categories).map((cat) => ({
                                 name: cat.toLowerCase(),
-                                value: client.commands
-                                    .filter((cmd) => cmd.category === cat && !cmd.hidden)
-                                    .map((cmd) => `\`${cmd.name}\``)
-                                    .join("\n"),
+                                value:
+                                    client.commands
+                                        .filter((cmd) => cmd.category === cat && !cmd.hidden)
+                                        .map((cmd) => `\`${cmd.name}\``)
+                                        .join("\n") || "None",
                                 inline: true,
                             }))
                         )

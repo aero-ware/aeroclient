@@ -37,7 +37,7 @@ export default class Loader {
                 const file = (await import(filePath)).default;
 
                 if (typeof file === "function") {
-                    file(this);
+                    file(this.client);
                     continue;
                 }
 
