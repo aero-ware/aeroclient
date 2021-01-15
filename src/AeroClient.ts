@@ -162,7 +162,7 @@ export default class AeroClient extends Client {
                             (this.clientOptions.responses?.perms
                                 ? this.clientOptions.responses.perms
                                 : `You need to have \`$PERMS\` to run this command.`
-                            ).replace("$PERMS", `\`${command.permissions!.map((p) => parse.case(p)).join(", ")}\``)
+                            ).replace(/\$PERMS/g, `\`${command.permissions!.map((p) => parse.case(p)).join(", ")}\``)
                         );
 
                     if (command.nsfw && message.channel.type !== "dm" && !message.channel.nsfw) {
@@ -177,9 +177,9 @@ export default class AeroClient extends Client {
                     ) {
                         return message.channel.send(
                             this.clientOptions.responses?.usage
-                                ?.replace("$COMMAND", command.name)
-                                .replace("$PREFIX", prefix)
-                                .replace("$USAGE", command.usage || "") ||
+                                ?.replace(/\$COMMAND/g, command.name)
+                                .replace(/\$PREFIX/g, prefix)
+                                .replace(/\$USAGE/g, command.usage || "") ||
                                 `The usage of \`${command.name}\` is \`${prefix}${command.name}${command.usage ? ` ${command.usage}` : ""}\`.`
                         );
                     }
@@ -222,7 +222,7 @@ export default class AeroClient extends Client {
 
                             return message.channel.send(
                                 this.clientOptions.responses && this.clientOptions.responses.cooldown
-                                    ? this.clientOptions.responses.cooldown.replace("$TIME", formattedTime).replace("$COMMAND", command.name)
+                                    ? this.clientOptions.responses.cooldown.replace(/\$TIME/g, formattedTime).replace(/\$COMMAND/g, command.name)
                                     : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
                             );
                         }
