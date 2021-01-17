@@ -648,8 +648,23 @@ error(message)
                             <h4 id="input">Input</h4>
                             <h4 id="parsing">Parsing</h4>
                             <h4 id="timing">Timing</h4>
-                            <h3 id="stopwatch">The Stopwatch class</h3>
+                            <h4 id="stopwatch">The Stopwatch class</h4>
                             <h4 id="pagination">Pagination</h4>
+                            <pre>
+                                <code>{`\
+utils.paginate(message, pages, options)
+`}</code>
+                            </pre>
+                            <p>Starts a pagination.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>pages</code> – Array of{" "}
+                            <a href="https://discord.js.org/#/docs/main/stable/class/MessageEmbed">MessageEmbed</a> instances
+                            <br />
+                            <span className="red">@param</span> <code>options</code> – Options for the pagination
+                            <br />
+                            <p id="pagination-options">The options are:</p>
+                            <ul></ul>
                         </div>
                         <div
                             className="footer"
