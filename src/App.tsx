@@ -509,7 +509,7 @@ callback(context)
                                     <code>client</code> – The AeroClient instance
                                 </li>
                                 <li>
-                                    <code>text</code> – Full message content. Same as <code>message.content</code>.
+                                    <code>text</code> – Full message content
                                 </li>
                             </ul>
                             <span className="red">@param</span> <code>context</code> – The context object
@@ -644,11 +644,159 @@ error(message)
                             <p>Logs a message in red.</p>
                             <span className="red">@param</span> <code>message</code> – Message to log
                             <br />
-                            <h3 id="utils">utils – Coming soon!</h3>
-                            <h4 id="input">Input</h4>
-                            <h4 id="parsing">Parsing</h4>
-                            <h4 id="timing">Timing</h4>
-                            <h4 id="stopwatch">The Stopwatch class</h4>
+                            <h2 id="utils">utils</h2>
+                            <h3 id="input">Input</h3>
+                            <pre>
+                                <code>{`\
+getReply(message, options)
+`}</code>
+                            </pre>
+                            <p>Helper method for getting text input.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>options</code> – Options for the method
+                            <br />
+                            <ul>
+                                <li>
+                                    <code>time</code> – Time limit for answers
+                                </li>
+                                <li>
+                                    <code>user</code> – Specific user to accept answers from
+                                </li>
+                                <li>
+                                    <code>keywords</code> – Array of strings for acceptable answers
+                                </li>
+                                <li>
+                                    <code>regex</code> – Regular expression to test answers
+                                </li>
+                            </ul>
+                            <pre>
+                                <code>{`\
+getReaction()
+`}</code>
+                            </pre>
+                            <p>Helper method for getting reaction input.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>options</code> – Options for the method
+                            <br />
+                            <ul>
+                                <li>
+                                    <code>time</code> – Time limit for answers
+                                </li>
+                                <li>
+                                    <code>user</code> – Specific user to accept answers from
+                                </li>
+                            </ul>
+                            <h3 id="parsing">Parsing</h3>
+                            <pre>
+                                <code>{`\
+utils.formatMacroCase(str)
+`}</code>
+                            </pre>
+                            <p>Converts macro case strings to a more readable string.</p>
+                            <span className="red">@param</span> <code>string</code> – String to format
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.formatList(items)
+`}</code>
+                            </pre>
+                            <p>Converts an array of strings into a more readable string.</p>
+                            <span className="red">@param</span> <code>items</code> – Array to format
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.parseUsers(message, args)
+`}</code>
+                            </pre>
+                            <p>Gets user objects from command arguments.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>args</code> – Command arguments
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.parseMembers(message, args)
+`}</code>
+                            </pre>
+                            <p>Gets member objects from command arguments.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>args</code> – Command arguments
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.parseRoles(message, args)
+`}</code>
+                            </pre>
+                            <p>Gets role objects from command arguments.</p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <span className="red">@param</span> <code>args</code> – Command arguments
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.trim(str, length)
+`}</code>
+                            </pre>
+                            <p>Trims a string to the specified length and replaces the last three characters with a ellipsis.</p>
+                            <span className="red">@param</span> <code>str</code> – String to trim
+                            <br />
+                            <span className="red">@param</span> <code>length</code> – Max length of the string
+                            <br />
+                            <h3 id="timing">Timing</h3>
+                            <pre>
+                                <code>{`\
+utils.aDelayOf(ms)
+`}</code>
+                            </pre>
+                            <p>
+                                Waits for a set amount of millliseconds, then continues execution. Only works with <code>await</code>.
+                            </p>
+                            <span className="red">@param</span> <code>message</code> – Message object
+                            <br />
+                            <pre>
+                                <code>{`\
+utils.getStopwatch()
+`}</code>
+                            </pre>
+                            <p>Creates a stopwatch object for use.</p>
+                            <h3 id="stopwatch">Stopwatch</h3>
+                            <h4 id="stopwatch-properties">Properties</h4>
+                            <ul>
+                                <li>
+                                    <code>elapsedTime</code> – Elapsed time from when the stopwatch started
+                                </li>
+                                <li>
+                                    <code>isRunning</code> – If the stopwatch is running or not
+                                </li>
+                            </ul>
+                            <h4 id="stopwatch-methods">Methods</h4>
+                            <pre>
+                                <code>{`\
+start()
+`}</code>
+                            </pre>
+                            <p>Starts the stopwatch.</p>
+                            <pre>
+                                <code>{`\
+stop()
+`}</code>
+                            </pre>
+                            <p>Stops the stopwatch.</p>
+                            <pre>
+                                <code>{`\
+reset()
+`}</code>
+                            </pre>
+                            <p>Reset the stopwatch.</p>
+                            <pre>
+                                <code>{`\
+restart()
+`}</code>
+                            </pre>
+                            <p>Restarts the stopwatch.</p>
                             <h4 id="pagination">Pagination</h4>
                             <pre>
                                 <code>{`\
@@ -664,7 +812,39 @@ utils.paginate(message, pages, options)
                             <span className="red">@param</span> <code>options</code> – Options for the pagination
                             <br />
                             <p id="pagination-options">The options are:</p>
-                            <ul></ul>
+                            <ul>
+                                <li>
+                                    <code>startingPage</code> – The page to show when pagination is first displayed
+                                </li>
+                                <li>
+                                    <code>time</code> – Time in milliseconds to show the pagination
+                                </li>
+                                <li>
+                                    <code>fastForwardAndRewind</code> – Enables two extra features with options
+                                    <ul>
+                                        <li>
+                                            <code>time</code> – Time in milliseconds to accept answers
+                                        </li>
+                                        <li>
+                                            <code>rewindPrompt</code> – Custom prompt to ask when rewinding
+                                        </li>
+                                        <li>
+                                            <code>fastForwardPrompt</code> – Custom prompt to ask when fast forwarding
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <code>goTo</code> – Enables an extra feature with options
+                                    <ul>
+                                        <li>
+                                            <code>time</code> – Time in milliseconds to accept answers
+                                        </li>
+                                        <li>
+                                            <code>prompt</code> – Custom prompt to ask
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                         <div
                             className="footer"
