@@ -145,6 +145,22 @@ const client = new AeroClient({
 });`}
                                 </code>
                             </pre>
+                            <br />
+                            <h3>Example (using CommonJS imports)</h3>
+                            <pre>
+                                <code>
+                                    {`\
+const AeroClient = require("@aeroware/aeroclient").default;
+
+// create a client with default settings and commands
+const client = new AeroClient({
+    token: "token",
+    prefix: "prefix",
+    useDefaults: true,
+    logging: true,
+});`}
+                                </code>
+                            </pre>
                             <h3>Included Packages</h3>
                             <p>
                                 <a href="http://npmjs.com/package/@aeroware/logger" target="_blank" rel="noreferrer" className="red">
