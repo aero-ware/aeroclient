@@ -39,3 +39,6 @@ The docs for this framework can be found [here](https://www.aero-ware.github.io/
 -   Middleware
     -   Stop command execution if needed
     -   Customize AeroClient behaviour
+
+---
+### Questions? Join the [Discord!](https://discord.gg/JdTQG3a9Ye)
