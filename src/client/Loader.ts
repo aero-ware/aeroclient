@@ -35,36 +35,30 @@ export default class Loader {
                 }
 
                 const file = (await import(filePath)).default;
-                
-                if (typeof file === "function") {
-                    file(this);
-                    return;
-                }
 
-                if (!file.name) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`The command in the file '${command}' has no name`);
+                if (typeof file === "function") {
+                    file(this.client);
                     continue;
                 }
 
-                if (!file.execute) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `The command in the file '${command}' has no callback`
-                        );
+                if (!file.name) {
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`The command in the file '${command}' has no name`);
+                    continue;
+                }
+
+                if (!file.callback) {
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`The command in the file '${command}' has no callback`);
                     continue;
                 }
 
                 if (names.has(file.name)) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`Found duplicate command '${file.name}'`);
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`Found duplicate command '${file.name}'`);
                     continue;
                 }
 
                 this.client.commands.set(file.name, file);
 
-                if (this.client.clientOptions.logging)
-                    this.client.logger.info(`Loaded the '${file.name}' command!`);
+                if (this.client.clientOptions.logging) this.client.logger.info(`Loaded the '${file.name}' command!`);
             }
         };
 
@@ -94,8 +88,7 @@ export default class Loader {
                 const file: EventHandler = (await import(filePath)).default;
 
                 if (names.has(file.name)) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`Found a duplicate event '${file.name}'`);
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`Found a duplicate event '${file.name}'`);
                     continue;
                 }
 
@@ -103,8 +96,7 @@ export default class Loader {
 
                 this.client[file.once ? "once" : "on"](file.name, file.callback.bind(this));
 
-                if (this.client.clientOptions.logging)
-                    this.client.logger.info(`Loaded the '${file.name}' event!`);
+                if (this.client.clientOptions.logging) this.client.logger.info(`Loaded the '${file.name}' event!`);
             }
         };
 
@@ -124,16 +116,14 @@ export default class Loader {
             })
         );
 
-        ["cooldown", "error", "usage", "nsfw", "guild", "guarded", "dm", "staff"].forEach(
-            (flag) => {
-                const key = `${flag.toUpperCase()}_RESPONSE`;
-                if (json[key])
-                    this.client.clientOptions.responses = {
-                        ...this.client.clientOptions.responses,
-                        [flag]: json[key],
-                    };
-            }
-        );
+        ["cooldown", "error", "usage", "nsfw", "guild", "guarded", "dm", "staff"].forEach((flag) => {
+            const key = `${flag.toUpperCase()}_RESPONSE`;
+            if (json[key])
+                this.client.clientOptions.responses = {
+                    ...this.client.clientOptions.responses,
+                    [flag]: json[key],
+                };
+        });
     }
 
     /**
