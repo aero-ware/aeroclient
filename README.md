@@ -10,7 +10,7 @@ It is fully customizable due to the many options and flags you can set. AeroClie
 
 ## Docs
 
-The docs for this framework can be found [here](https://www.aero-ware.github.io/aeroclient)
+The docs for this framework can be found [here](https://aero-ware.github.io/aeroclient/)
 
 ## Features
 
@@ -39,3 +39,6 @@ The docs for this framework can be found [here](https://www.aero-ware.github.io/
 -   Middleware
     -   Stop command execution if needed
     -   Customize AeroClient behaviour
+
+---
+### Questions? Join the [Discord!](https://discord.gg/JdTQG3a9Ye)
