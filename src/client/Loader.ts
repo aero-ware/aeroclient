@@ -94,7 +94,7 @@ export default class Loader {
 
                 names.add(file.name);
 
-                this.client[file.once ? "once" : "on"](file.name, file.callback.bind(this));
+                this.client[file.once ? "once" : "on"](file.name, file.callback.bind(this.client));
 
                 if (this.client.clientOptions.logging) this.client.logger.info(`Loaded the '${file.name}' event!`);
             }
