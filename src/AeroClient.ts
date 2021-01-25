@@ -143,7 +143,7 @@ export default class AeroClient extends Client {
                         return;
                     }
 
-                    if (command.staffOnly && this.clientOptions.staff && this.clientOptions.staff.includes(message.author.id)) {
+                    if (command.staffOnly && this.clientOptions.staff && !this.clientOptions.staff.includes(message.author.id)) {
                         if (this.clientOptions.responses?.staff) message.channel.send(this.clientOptions.responses?.staff);
                         return;
                     }
