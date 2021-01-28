@@ -171,7 +171,11 @@ export default class AeroClient extends Client {
                         return;
                     }
 
-                    if (command.args && !args.length) {
+                    if (
+                        (command.args && !args.length) ||
+                        (command.minArgs && command.minArgs > args.length) ||
+                        (command.maxArgs && command.maxArgs < args.length)
+                    ) {
                         return message.channel.send(
                             this.clientOptions.responses?.usage
                                 ?.replace(/\$COMMAND/g, command.name)
