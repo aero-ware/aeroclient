@@ -1,6 +1,6 @@
 {
     "name": "@aeroware/aeroclient",
-    "version": "1.9.4",
+    "version": "1.9.5",
     "description": "advanced discord.js command handler framework with many extra utilities",
     "main": "dist/index.js",
     "scripts": {
