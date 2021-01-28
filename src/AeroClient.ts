@@ -111,8 +111,9 @@ export default class AeroClient extends Client {
 
                     const commandName = args.shift();
 
-                    const command =
-                        this.commands.get(commandName || "") || this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")));
+                    const command = message.content.startsWith(prefix)
+                        ? this.commands.get(commandName || "") || this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")))
+                        : undefined;
 
                     const shouldStop = await this.middlewares.execute({
                         message,
