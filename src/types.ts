@@ -219,6 +219,10 @@ export interface AeroClientOptions {
      */
     staff?: string[];
     /**
+     * Should staff be able to skip cooldowns?
+     */
+    disableStaffCooldowns?: boolean;
+    /**
      * Custom handler instead of default one.
      */
     customHandler?: (message: Message) => unknown;

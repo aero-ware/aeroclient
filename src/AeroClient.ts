@@ -185,48 +185,50 @@ export default class AeroClient extends Client {
                         );
                     }
 
-                    if (!this.cooldowns.has(command.name)) {
-                        this.cooldowns.set(command.name, new Collection());
-
-                        if (this.cooldownStore) {
-                            const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
-
-                            cooldownObj[message.author.id] = 0;
-
-                            await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
-                        }
-                    }
-
                     const now = Date.now();
-
+    
                     let timestamps = this.cooldownStore ? JSON.parse((await this.cooldownStore.get(command.name)) || "{}") : this.cooldowns.get(command.name);
 
-                    const cooldownAmount = (command.cooldown || 0) * 1000;
-
-                    if (!(timestamps instanceof Collection)) {
-                        const tCollection = new Collection<string, number>();
-                        for (const k in timestamps) tCollection.set(k, timestamps[k]);
-                        timestamps = tCollection;
-                    }
-
-                    if (timestamps.has(message.author.id)) {
-                        const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
-
-                        if (now < expirationTime) {
-                            const timeLeft = expirationTime - now;
-
-                            const msTime = ms(Math.round(timeLeft), {
-                                long: true,
-                            });
-
-                            const formattedTime = msTime.endsWith("ms") ? `${(timeLeft / 1000).toFixed(1)} seconds` : msTime;
-
-                            return message.channel.send(
-                                this.clientOptions.responses && this.clientOptions.responses.cooldown
-                                    ? this.clientOptions.responses.cooldown.replace(/\$TIME/g, formattedTime).replace(/\$COMMAND/g, command.name)
-                                    : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
-                            );
+                    if (!this.clientOptions.staff?.includes(message.author.id)) {
+                        if (!this.cooldowns.has(command.name)) {
+                            this.cooldowns.set(command.name, new Collection());
+    
+                            if (this.cooldownStore) {
+                                const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
+    
+                                cooldownObj[message.author.id] = 0;
+    
+                                await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                            }
                         }
+    
+                        const cooldownAmount = (command.cooldown || 0) * 1000;
+    
+                        if (!(timestamps instanceof Collection)) {
+                            const tCollection = new Collection<string, number>();
+                            for (const k in timestamps) tCollection.set(k, timestamps[k]);
+                            timestamps = tCollection;
+                        }
+    
+                        if (timestamps.has(message.author.id)) {
+                            const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
+    
+                            if (now < expirationTime) {
+                                const timeLeft = expirationTime - now;
+    
+                                const msTime = ms(Math.round(timeLeft), {
+                                    long: true,
+                                });
+    
+                                const formattedTime = msTime.endsWith("ms") ? `${(timeLeft / 1000).toFixed(1)} seconds` : msTime;
+    
+                                return message.channel.send(
+                                    this.clientOptions.responses && this.clientOptions.responses.cooldown
+                                        ? this.clientOptions.responses.cooldown.replace(/\$TIME/g, formattedTime).replace(/\$COMMAND/g, command.name)
+                                        : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
+                                );
+                            }
+                        }    
                     }
 
                     try {
@@ -239,14 +241,17 @@ export default class AeroClient extends Client {
                                 locale: (await this.localeStore.get(message.author.id)) || "en",
                             })) !== "invalid"
                         ) {
-                            timestamps!.set(message.author.id, now);
-                            if (this.cooldownStore) {
-                                const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
+                            if (!this.clientOptions.staff?.includes(message.author.id)) {
+                                timestamps!.set(message.author.id, now);
+                                if (this.cooldownStore) {
+                                    const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
-                                cooldownObj[message.author.id] = now;
+                                    cooldownObj[message.author.id] = now;
 
-                                await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                                    await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                                }
                             }
+                            
                         }
                     } catch (err) {
                         console.error(err);
