@@ -1,7 +1,7 @@
 # AeroClient
 
 ![AeroClient](aeroclient.png)
-[![Discord](https://discordapp.com/api/guilds/778074336447168512/embed.png)](https://discord.gg/JdTQG3a9Ye)
+[![Discord](https://discordapp.com/api/guilds/804819758775533588/embed.png)](https://discord.gg/Vs4rfsfd4q)
 
 ## About
 
