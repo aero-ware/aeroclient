@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/aeroclient/static/css/main.3af86b73.chunk.css",
-    "main.js": "/aeroclient/static/js/main.4024bb41.chunk.js",
-    "main.js.map": "/aeroclient/static/js/main.4024bb41.chunk.js.map",
+    "main.js": "/aeroclient/static/js/main.eff794f7.chunk.js",
+    "main.js.map": "/aeroclient/static/js/main.eff794f7.chunk.js.map",
     "runtime-main.js": "/aeroclient/static/js/runtime-main.ed930f8f.js",
     "runtime-main.js.map": "/aeroclient/static/js/runtime-main.ed930f8f.js.map",
     "static/js/2.f57e0619.chunk.js": "/aeroclient/static/js/2.f57e0619.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.ed930f8f.js",
     "static/js/2.f57e0619.chunk.js",
     "static/css/main.3af86b73.chunk.css",
-    "static/js/main.4024bb41.chunk.js"
+    "static/js/main.eff794f7.chunk.js"
   ]
 }
