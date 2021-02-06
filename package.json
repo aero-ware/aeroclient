@@ -30,7 +30,7 @@
     "bugs": {
         "url": "https://github.com/aero-ware/aeroclient/issues"
     },
-    "homepage": "https://aero-ware/github.io/aeroclient",
+    "homepage": "https://aero-ware.github.io/aeroclient",
     "dependencies": {
         "@aeroware/discord-utils": "^1.0.1",
         "@aeroware/logger": "^2.6.0",
