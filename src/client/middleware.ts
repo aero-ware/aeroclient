@@ -8,9 +8,10 @@
  * https://medium.com/javascript-in-plain-english/basic-middleware-pattern-in-javascript-ef8756a75cb1
  */
 
-export type Next = (stop?: boolean) => Promise<void> | void;
+export type Next = () => Promise<void> | void;
+export type Stop = () => Promise<void> | void;
 
-export type Middleware<T> = (context: T, next: Next) => Promise<unknown> | unknown;
+export type Middleware<T> = (context: T, next: Next, stop: Stop) => Promise<unknown> | unknown;
 
 export type Pipeline<T> = {
     use: (...middlewares: Middleware<T>[]) => void;
@@ -39,13 +40,15 @@ export default function Pipeline<T>(...middlewares: Middleware<T>[]): Pipeline<T
             const middleware = stack[index];
 
             if (middleware) {
-                await middleware(context, (stopExec) => {
-                    if (stopExec) {
+                await middleware(
+                    context,
+                    () => {
+                        return runner(index + 1);
+                    },
+                    () => {
                         stop = true;
-                        return;
                     }
-                    return runner(index + 1);
-                });
+                );
             }
         };
 

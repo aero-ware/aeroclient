@@ -28,9 +28,6 @@ export default function registerDefaults(client: AeroClient) {
 
             if (!args[0]) return message.channel.send(`The server's prefix is \`${prefix}\`.`);
 
-            if (!message.member?.hasPermission("ADMINISTRATOR"))
-                return message.channel.send("Sorry, you don't have permission.");
-
             client.prefixes.set(message.guild?.id, args[0]);
 
             return message.channel.send(`:white_check_mark: Set the prefix to \`${args[0]}\``);
@@ -74,7 +71,7 @@ export default function registerDefaults(client: AeroClient) {
 
             await client.localeStore.set(message.author.id, args[0]);
             message.channel.send(
-                `:white_checl_mark: Set your preferred locale to \`${args[0]}\``
+                `:white_check_mark: Set your preferred locale to \`${args[0]}\``
             );
         },
     });
@@ -181,7 +178,7 @@ export default function registerDefaults(client: AeroClient) {
 
             const uncategorized = client.commands
                 .filter((cmd) => typeof cmd.category === "undefined" && !cmd.hidden)
-                .map((cmd) => `\`${cmd.name}\``)
+                .map((cmd) => cmd.name)
                 .join("\n");
 
             const fields = Array.from(categories).map((cat) => ({
@@ -189,10 +186,15 @@ export default function registerDefaults(client: AeroClient) {
                 value:
                     client.commands
                         .filter((cmd) => cmd.category === cat && !cmd.hidden)
-                        .map((cmd) => `\`${cmd.name}\``)
+                        .map((cmd) => cmd.name)
                         .join("\n") || "None",
                 inline: true,
             }));
+
+            const max = Math.max(
+                ...fields.map((f) => f.value.split("\n").length),
+                uncategorized.split("\n").length
+            );
 
             if (uncategorized)
                 fields.push({
@@ -210,7 +212,31 @@ export default function registerDefaults(client: AeroClient) {
                             `Use \`${prefix}help <command>\` for info on a specific command!`
                         )
                         .setTimestamp(message.createdAt)
-                        .addFields(fields)
+                        .addFields(
+                            fields
+                                .map(({ name, value, inline }) => ({
+                                    name,
+                                    value: `\`\`\`\n${
+                                        value +
+                                        "".padEnd(
+                                            (max - value.split("\n").length) * 2,
+                                            "\n\u200b"
+                                        )
+                                    }\n\`\`\``,
+                                    inline,
+                                }))
+                                .flatMap((f, i) =>
+                                    i % 2 === 0 && i
+                                        ? [
+                                              {
+                                                  name: "\u200b",
+                                                  value: "\u200b",
+                                              },
+                                              f,
+                                          ]
+                                        : f
+                                )
+                        )
                 );
             }
 

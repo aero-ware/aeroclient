@@ -32,7 +32,16 @@ export type MiddlewareContext = {
 /**
  * Represents a command callback for execution of the command.
  */
-export type CommandCallback = (context: { message: Message; args: string[]; client: AeroClient; text: string; locale: string }) => unknown;
+export type CommandCallback = (
+    this: Command,
+    context: {
+        message: Message;
+        args: string[];
+        client: AeroClient;
+        text: string;
+        locale: string;
+    }
+) => unknown;
 
 /**
  * A command that the client will load.
@@ -218,6 +227,14 @@ export interface AeroClientOptions {
      * Array of ids of staff users.
      */
     staff?: string[];
+    /**
+     * ID of the error log channel.
+     */
+    logChannel?: string;
+    /**
+     * Allow spaces to be between the prefix and command?
+     */
+    allowSpaces?: boolean;
     /**
      * Custom handler instead of default one.
      */
