@@ -1,5 +1,9 @@
 import { ShardingManager, ShardingManagerMode } from "discord.js";
 
+/**
+ * WORK IN PROGRESS
+ */
+
 export default class Sharder extends ShardingManager {
     constructor(
         filePath: string,
