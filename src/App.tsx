@@ -326,6 +326,14 @@ new AeroClient(clientOptions, options);
                                     cooldowns
                                 </li>
                                 <li>
+                                    <code>disableStaffCooldowns</code> – Flag to disable
+                                    cooldowns for staff
+                                </li>
+                                <li>
+                                    <code>allowSpaces</code> – Flag to enable whitespace between
+                                    prefix and command
+                                </li>
+                                <li>
                                     <code>responses</code> – Response info
                                 </li>
                                 <ul>
