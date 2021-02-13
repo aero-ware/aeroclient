@@ -334,14 +334,21 @@ export default class AeroClient extends Client {
                                 ? `${(timeLeft / 1000).toFixed(1)} seconds`
                                 : msTime;
 
-                            return message.channel.send(
-                                this.clientOptions.responses &&
-                                    this.clientOptions.responses.cooldown
-                                    ? this.clientOptions.responses.cooldown
-                                          .replace(/\$TIME/g, formattedTime)
-                                          .replace(/\$COMMAND/g, command.name)
-                                    : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
-                            );
+                            if (
+                                !(
+                                    this.clientOptions.staff &&
+                                    this.clientOptions.staff.includes(message.author.id) &&
+                                    this.clientOptions.disableStaffCooldowns
+                                )
+                            )
+                                return message.channel.send(
+                                    this.clientOptions.responses &&
+                                        this.clientOptions.responses.cooldown
+                                        ? this.clientOptions.responses.cooldown
+                                              .replace(/\$TIME/g, formattedTime)
+                                              .replace(/\$COMMAND/g, command.name)
+                                        : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
+                                );
                         }
                     }
 
