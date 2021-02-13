@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import Keyv from "keyv";
 import ms from "ms";
+import { DiscordInteractions, Interaction } from "slash-commands";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
@@ -468,5 +469,20 @@ export default class AeroClient extends Client {
     public registerCommand(command: Command) {
         this.commands.set(command.name, command);
         return this;
+    }
+
+    /**
+     * Creates an interface to interact with your app.
+     * @param key Client public key.
+     */
+    public createInteraction(key: string) {
+        //@ts-ignore
+        this.ws.on("INTERACTION_CREATE", (i: Interaction) => this.emit("interaction", i));
+
+        return new DiscordInteractions({
+            applicationId: this.user?.id!,
+            authToken: this.clientOptions.token!,
+            publicKey: key,
+        });
     }
 }
