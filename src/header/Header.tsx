@@ -28,7 +28,7 @@ function Header() {
                     <i className="fab fa-github"></i>
                 </a>
                 <a
-                    href="https://www.npmjs.com/org/aeroware"
+                    href="https://www.npmjs.com/package/@aeroware/aeroclient"
                     target="_blank"
                     rel="noreferrer"
                     className="red"
