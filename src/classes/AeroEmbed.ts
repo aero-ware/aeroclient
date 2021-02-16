@@ -3,6 +3,7 @@ import { EmbedFieldData, MessageEmbed, MessageEmbedOptions } from "discord.js";
 export default class AeroEmbed extends MessageEmbed {
     constructor(data?: MessageEmbed | MessageEmbedOptions) {
         super(data);
+        this.setColor("RANDOM");
     }
 
     /**

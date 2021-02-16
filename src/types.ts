@@ -116,6 +116,14 @@ export interface Command {
      */
     hidden?: boolean;
     /**
+     * Does this command have subcommands?
+     */
+    hasSubcommands: boolean;
+    /**
+     * Parent command name. Only works with subcommands.
+     */
+    parentCommand: string;
+    /**
      * The callback to execute.
      */
     callback: CommandCallback;
@@ -239,6 +247,10 @@ export interface AeroClientOptions {
      * Should staff be able to skip cooldowns?
      */
     disableStaffCooldowns?: boolean;
+    /**
+     * Enable experimental subcommands?
+     */
+    experimentalSubcommands?: boolean;
     /**
      * Custom handler instead of default one.
      */

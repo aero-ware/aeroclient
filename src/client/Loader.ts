@@ -8,7 +8,7 @@ export default class Loader {
 
     /**
      * Creates a Loder given a client.
-     * @param client the client that called this loader
+     * @param client the client that called this loader.
      */
     constructor(client: AeroClient) {
         this.client = client;
@@ -44,7 +44,7 @@ export default class Loader {
                 if (!file.name) {
                     if (this.client.clientOptions.logging)
                         this.client.logger.warn(
-                            `The command in the file '${command}' has no name`
+                            `The command in the file '${command}' has no name.`
                         );
                     continue;
                 }
@@ -52,14 +52,25 @@ export default class Loader {
                 if (!file.callback) {
                     if (this.client.clientOptions.logging)
                         this.client.logger.warn(
-                            `The command in the file '${command}' has no callback`
+                            `The command in the file '${command}' has no callback.`
+                        );
+                    continue;
+                }
+
+                if (
+                    (file.parentCommand || file.hasSubcommands) &&
+                    !this.client.clientOptions.experimentalSubcommands
+                ) {
+                    if (this.client.clientOptions.logging)
+                        this.client.logger.warn(
+                            `'${command}' is using subcommands, but experimental subcommands are not enabled.`
                         );
                     continue;
                 }
 
                 if (names.has(file.name)) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`Found duplicate command '${file.name}'`);
+                        this.client.logger.warn(`Found duplicate command '${file.name}'.`);
                     continue;
                 }
 
@@ -146,6 +157,8 @@ export default class Loader {
                     ...this.client.clientOptions.responses,
                     [flag]: json[key],
                 };
+            if (this.client.clientOptions.logging)
+                this.client.logger.info(`Loaded '${flag.toUpperCase()}_RESPONSE'!`);
         });
     }
 
@@ -166,15 +179,19 @@ export default class Loader {
                 if (f.isFile() && f.name.endsWith("json")) {
                     const name = f.name.slice(0, f.name.length - 5);
 
-                    if (locales.includes(name))
+                    if (locales.includes(name)) {
                         this.client.locales[name as Locales] = JSON.parse(
                             await readFile(`${path}/${f.name}`, {
                                 encoding: "utf-8",
                             })
                         );
+
+                        if (this.client.clientOptions.logging)
+                            this.client.logger.info(`Loaded '${f.name}'!`);
+                    }
                 }
             } catch (e) {
-                this.client.logger.error(`Could not load ${f}`);
+                this.client.logger.error(`Could not load '${f.name}'.`);
             }
         });
     }

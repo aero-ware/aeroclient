@@ -1,5 +1,7 @@
 import { MessageEmbed, MessageEmbedOptions } from "discord.js";
 
+interface TipEmbed extends MessageEmbed {}
+
 export default function TipEmbed(
     tips: string[],
     options?: {
@@ -10,8 +12,8 @@ export default function TipEmbed(
             chance: number;
         };
     }
-) {
-    return class TipEmbed extends MessageEmbed {
+): TipEmbed {
+    class TipEmbed extends MessageEmbed {
         static footers = tips;
         static easterEggs = options && options.easterEggs && options.easterEggs.eggs;
         static eggChance = options && options.easterEggs && options.easterEggs.chance;
@@ -32,4 +34,6 @@ export default function TipEmbed(
                 );
         }
     };
+
+    return TipEmbed
 }

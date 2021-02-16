@@ -15,7 +15,7 @@ import ms from "ms";
 import { DiscordInteractions, Interaction } from "slash-commands";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
-import Pipeline, { Middleware } from "./client/middleware";
+import Pipeline from "./client/middleware";
 import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types";
 
 /**
@@ -124,7 +124,7 @@ export default class AeroClient extends Client {
 
                             if (!["dm", "group", "text"].includes(this.logChannel.type))
                                 this.logger.error(
-                                    "Channel type must be either 'dm', 'group', or 'text'"
+                                    "Channel type must be either 'dm', 'group', or 'text'."
                                 );
                             else
                                 process.on("unhandledRejection", (err) => {
@@ -138,7 +138,7 @@ export default class AeroClient extends Client {
                                     );
                                 });
                         } catch {
-                            this.logger.error("Log channel ID is invalid");
+                            this.logger.error("Log channel ID is invalid.");
                         }
                     }
                 })
@@ -162,7 +162,7 @@ export default class AeroClient extends Client {
                         ? args.shift() || args.shift()
                         : args.shift();
 
-                    const command = message.content.startsWith(prefix)
+                    let command = message.content.startsWith(prefix)
                         ? this.commands.get(commandName || "") ||
                           this.commands.find(
                               (cmd) =>
@@ -218,6 +218,24 @@ export default class AeroClient extends Client {
                             );
                         return;
                     }
+
+                    if (this.clientOptions.experimentalSubcommands)
+                        while (command.hasSubcommands) {
+                            const commandName = args.shift();
+
+                            if (commandName) {
+                                const subcommand =
+                                    this.commands.get(commandName) ||
+                                    this.commands.find(
+                                        (cmd) =>
+                                            !!(cmd.aliases && cmd.aliases.includes(commandName))
+                                    );
+
+                                if (subcommand && subcommand.parentCommand === command.name) {
+                                    command = subcommand;
+                                }
+                            }
+                        }
 
                     if (
                         command.staffOnly &&
