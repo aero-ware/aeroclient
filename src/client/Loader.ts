@@ -43,24 +43,17 @@ export default class Loader {
 
                 if (!file.name) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `The command in the file '${command}' has no name.`
-                        );
+                        this.client.logger.warn(`The command in the file '${command}' has no name.`);
                     continue;
                 }
 
                 if (!file.callback) {
                     if (this.client.clientOptions.logging)
-                        this.client.logger.warn(
-                            `The command in the file '${command}' has no callback.`
-                        );
+                        this.client.logger.warn(`The command in the file '${command}' has no callback.`);
                     continue;
                 }
 
-                if (
-                    (file.parentCommand || file.hasSubcommands) &&
-                    !this.client.clientOptions.experimentalSubcommands
-                ) {
+                if ((file.parentCommand || file.hasSubcommands) && !this.client.clientOptions.experimentalSubcommands) {
                     if (this.client.clientOptions.logging)
                         this.client.logger.warn(
                             `'${command}' is using subcommands, but experimental subcommands are not enabled.`
@@ -69,15 +62,13 @@ export default class Loader {
                 }
 
                 if (names.has(file.name)) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`Found duplicate command '${file.name}'.`);
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`Found duplicate command '${file.name}'.`);
                     continue;
                 }
 
                 this.client.commands.set(file.name, file);
 
-                if (this.client.clientOptions.logging)
-                    this.client.logger.info(`Loaded the '${file.name}' command!`);
+                if (this.client.clientOptions.logging) this.client.logger.info(`Loaded the '${file.name}' command!`);
             }
         };
 
@@ -107,20 +98,15 @@ export default class Loader {
                 const file: EventHandler = (await import(filePath)).default;
 
                 if (names.has(file.name)) {
-                    if (this.client.clientOptions.logging)
-                        this.client.logger.warn(`Found a duplicate event '${file.name}'`);
+                    if (this.client.clientOptions.logging) this.client.logger.warn(`Found a duplicate event '${file.name}'`);
                     continue;
                 }
 
                 names.add(file.name);
 
-                this.client[file.once ? "once" : "on"](
-                    file.name,
-                    file.callback.bind(this.client)
-                );
+                this.client[file.once ? "once" : "on"](file.name, file.callback.bind(this.client));
 
-                if (this.client.clientOptions.logging)
-                    this.client.logger.info(`Loaded the '${file.name}' event!`);
+                if (this.client.clientOptions.logging) this.client.logger.info(`Loaded the '${file.name}' event!`);
             }
         };
 
@@ -140,25 +126,14 @@ export default class Loader {
             })
         );
 
-        [
-            "cooldown",
-            "error",
-            "usage",
-            "nsfw",
-            "guild",
-            "guarded",
-            "dm",
-            "staff",
-            "perms",
-        ].forEach((flag) => {
+        ["cooldown", "error", "usage", "nsfw", "guild", "guarded", "disabled", "dm", "staff", "perms"].forEach((flag) => {
             const key = `${flag.toUpperCase()}_RESPONSE`;
             if (json[key])
                 this.client.clientOptions.responses = {
                     ...this.client.clientOptions.responses,
                     [flag]: json[key],
                 };
-            if (this.client.clientOptions.logging)
-                this.client.logger.info(`Loaded '${flag.toUpperCase()}_RESPONSE'!`);
+            if (this.client.clientOptions.logging) this.client.logger.info(`Loaded '${flag.toUpperCase()}_RESPONSE'!`);
         });
     }
 
@@ -186,8 +161,7 @@ export default class Loader {
                             })
                         );
 
-                        if (this.client.clientOptions.logging)
-                            this.client.logger.info(`Loaded '${f.name}'!`);
+                        if (this.client.clientOptions.logging) this.client.logger.info(`Loaded '${f.name}'!`);
                     }
                 }
             } catch (e) {
