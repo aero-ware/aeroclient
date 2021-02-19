@@ -118,11 +118,11 @@ export interface Command {
     /**
      * Does this command have subcommands?
      */
-    hasSubcommands: boolean;
+    hasSubcommands?: boolean;
     /**
      * Parent command name. Only works with subcommands.
      */
-    parentCommand: string;
+    parentCommand?: string;
     /**
      * The callback to execute.
      */

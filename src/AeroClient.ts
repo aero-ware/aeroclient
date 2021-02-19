@@ -1,21 +1,13 @@
 import utils from "@aeroware/discord-utils";
 import Logger from "@aeroware/logger";
 import parse from "discord-parse-utils";
-import {
-    Channel,
-    Client,
-    ClientOptions,
-    Collection,
-    Message,
-    MessageEmbed,
-    TextChannel,
-} from "discord.js";
+import { Channel, Client, ClientOptions, Collection, Message, MessageEmbed, TextChannel } from "discord.js";
 import Keyv from "keyv";
 import ms from "ms";
 import { DiscordInteractions, Interaction } from "slash-commands";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
-import Pipeline from "./client/middleware";
+import Pipeline, { Middleware } from "./client/middleware";
 import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types";
 
 /**
@@ -77,10 +69,7 @@ export default class AeroClient extends Client {
 
         this.init(options);
 
-        this.logger = new Logger(
-            options.loggerHeader || "aeroclient",
-            options.loggerShowFlags || false
-        );
+        this.logger = new Logger(options.loggerHeader || "aeroclient", options.loggerShowFlags || false);
 
         this.prefixes = new Keyv<string>(options.connectionUri, {
             namespace: "prefixes",
@@ -123,9 +112,7 @@ export default class AeroClient extends Client {
                             this.logChannel = await this.channels.fetch(options.logChannel);
 
                             if (!["dm", "group", "text"].includes(this.logChannel.type))
-                                this.logger.error(
-                                    "Channel type must be either 'dm', 'group', or 'text'."
-                                );
+                                this.logger.error("Channel type must be either 'dm', 'group', or 'text'.");
                             else
                                 process.on("unhandledRejection", (err) => {
                                     console.log(err);
@@ -151,23 +138,16 @@ export default class AeroClient extends Client {
                     if (message.author.bot) return;
 
                     const prefix = message.guild
-                        ? (await this.prefixes.get(message.guild?.id)) ||
-                          this.clientOptions.prefix ||
-                          this.defaultPrefix
+                        ? (await this.prefixes.get(message.guild?.id)) || this.clientOptions.prefix || this.defaultPrefix
                         : this.clientOptions.prefix || this.defaultPrefix;
 
                     const args = message.content.slice(prefix.length).split(/\s+/g);
 
-                    const commandName = this.clientOptions.allowSpaces
-                        ? args.shift() || args.shift()
-                        : args.shift();
+                    const commandName = this.clientOptions.allowSpaces ? args.shift() || args.shift() : args.shift();
 
                     let command = message.content.startsWith(prefix)
                         ? this.commands.get(commandName || "") ||
-                          this.commands.find(
-                              (cmd) =>
-                                  !!(cmd.aliases && cmd.aliases.includes(commandName || ""))
-                          )
+                          this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")))
                         : undefined;
 
                     const shouldStop = await this.middlewares.execute({
@@ -182,40 +162,23 @@ export default class AeroClient extends Client {
 
                     if (!command) return;
 
-                    const guildDisabledCommands = (
-                        (await this.disabledCommands.get(message.guild?.id || "")) || ""
-                    ).split(",");
+                    const guildDisabledCommands = ((await this.disabledCommands.get(message.guild?.id || "")) || "").split(",");
 
                     if (command.guildOnly && !message.guild) {
                         if (this.clientOptions.responses?.guild)
-                            message.channel.send(
-                                this.clientOptions.responses?.guild.replace(
-                                    /\$COMMAND/g,
-                                    command.name
-                                )
-                            );
+                            message.channel.send(this.clientOptions.responses?.guild.replace(/\$COMMAND/g, command.name));
                         return;
                     }
 
                     if (command.dmOnly && message.guild) {
                         if (this.clientOptions.responses?.dm)
-                            message.channel.send(
-                                this.clientOptions.responses?.dm.replace(
-                                    /\$COMMAND/g,
-                                    command.name
-                                )
-                            );
+                            message.channel.send(this.clientOptions.responses?.dm.replace(/\$COMMAND/g, command.name));
                         return;
                     }
 
                     if (guildDisabledCommands.includes(command.name)) {
                         if (this.clientOptions.responses?.disabled)
-                            message.channel.send(
-                                this.clientOptions.responses?.disabled.replace(
-                                    /\$COMMAND/g,
-                                    command.name
-                                )
-                            );
+                            message.channel.send(this.clientOptions.responses?.disabled.replace(/\$COMMAND/g, command.name));
                         return;
                     }
 
@@ -226,10 +189,7 @@ export default class AeroClient extends Client {
                             if (commandName) {
                                 const subcommand =
                                     this.commands.get(commandName) ||
-                                    this.commands.find(
-                                        (cmd) =>
-                                            !!(cmd.aliases && cmd.aliases.includes(commandName))
-                                    );
+                                    this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName)));
 
                                 if (subcommand && subcommand.parentCommand === command.name) {
                                     command = subcommand;
@@ -243,12 +203,7 @@ export default class AeroClient extends Client {
                         !this.clientOptions.staff.includes(message.author.id)
                     ) {
                         if (this.clientOptions.responses?.staff)
-                            message.channel.send(
-                                this.clientOptions.responses?.staff.replace(
-                                    /\$COMMAND/g,
-                                    command.name
-                                )
-                            );
+                            message.channel.send(this.clientOptions.responses?.staff.replace(/\$COMMAND/g, command.name));
                         return;
                     }
 
@@ -267,27 +222,13 @@ export default class AeroClient extends Client {
                                 ? this.clientOptions.responses.perms
                                 : `You need to have \`$PERMS\` to run this command.`
                             )
-                                .replace(
-                                    /\$PERMS/g,
-                                    `\`${command
-                                        .permissions!.map((p) => parse.case(p))
-                                        .join(", ")}\``
-                                )
+                                .replace(/\$PERMS/g, `\`${command.permissions!.map((p) => parse.case(p)).join(", ")}\``)
                                 .replace(/\$COMMAND/g, command.name)
                         );
 
-                    if (
-                        command.nsfw &&
-                        message.channel.type !== "dm" &&
-                        !message.channel.nsfw
-                    ) {
+                    if (command.nsfw && message.channel.type !== "dm" && !message.channel.nsfw) {
                         if (this.clientOptions.responses?.nsfw)
-                            message.channel.send(
-                                this.clientOptions.responses?.nsfw.replace(
-                                    /\$COMMAND/g,
-                                    command.name
-                                )
-                            );
+                            message.channel.send(this.clientOptions.responses?.nsfw.replace(/\$COMMAND/g, command.name));
                         return;
                     }
 
@@ -301,9 +242,9 @@ export default class AeroClient extends Client {
                                 ?.replace(/\$COMMAND/g, command.name)
                                 .replace(/\$PREFIX/g, prefix)
                                 .replace(/\$USAGE/g, command.usage || "") ||
-                                `The usage of \`${command.name}\` is \`${prefix}${
-                                    command.name
-                                }${command.usage ? ` ${command.usage}` : ""}\`.`
+                                `The usage of \`${command.name}\` is \`${prefix}${command.name}${
+                                    command.usage ? ` ${command.usage}` : ""
+                                }\`.`
                         );
                     }
 
@@ -311,16 +252,11 @@ export default class AeroClient extends Client {
                         this.cooldowns.set(command.name, new Collection());
 
                         if (this.cooldownStore) {
-                            const cooldownObj = JSON.parse(
-                                (await this.cooldownStore.get(command.name)) || "{}"
-                            );
+                            const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
                             cooldownObj[message.author.id] = 0;
 
-                            await this.cooldownStore.set(
-                                command.name,
-                                JSON.stringify(cooldownObj)
-                            );
+                            await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
                         }
                     }
 
@@ -339,8 +275,7 @@ export default class AeroClient extends Client {
                     }
 
                     if (timestamps.has(message.author.id)) {
-                        const expirationTime =
-                            timestamps!.get(message.author.id)! + cooldownAmount;
+                        const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
 
                         if (now < expirationTime) {
                             const timeLeft = expirationTime - now;
@@ -349,9 +284,7 @@ export default class AeroClient extends Client {
                                 long: true,
                             });
 
-                            const formattedTime = msTime.endsWith("ms")
-                                ? `${(timeLeft / 1000).toFixed(1)} seconds`
-                                : msTime;
+                            const formattedTime = msTime.endsWith("ms") ? `${(timeLeft / 1000).toFixed(1)} seconds` : msTime;
 
                             if (
                                 !(
@@ -361,8 +294,7 @@ export default class AeroClient extends Client {
                                 )
                             )
                                 return message.channel.send(
-                                    this.clientOptions.responses &&
-                                        this.clientOptions.responses.cooldown
+                                    this.clientOptions.responses && this.clientOptions.responses.cooldown
                                         ? this.clientOptions.responses.cooldown
                                               .replace(/\$TIME/g, formattedTime)
                                               .replace(/\$COMMAND/g, command.name)
@@ -383,25 +315,18 @@ export default class AeroClient extends Client {
                         ) {
                             timestamps!.set(message.author.id, now);
                             if (this.cooldownStore) {
-                                const cooldownObj = JSON.parse(
-                                    (await this.cooldownStore.get(command.name)) || "{}"
-                                );
+                                const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
                                 cooldownObj[message.author.id] = now;
 
-                                await this.cooldownStore.set(
-                                    command.name,
-                                    JSON.stringify(cooldownObj)
-                                );
+                                await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
                             }
                         }
                     } catch (err) {
                         console.error(err);
                         if (this.clientOptions.responses && this.clientOptions.responses.error)
                             message.channel.send(
-                                this.clientOptions.responses.error
-                                    .replace(/\$COMMAND/g, command.name)
-                                    .replace(/\$ERROR/g, err)
+                                this.clientOptions.responses.error.replace(/\$COMMAND/g, command.name).replace(/\$ERROR/g, err)
                             );
                     }
 
@@ -429,11 +354,7 @@ export default class AeroClient extends Client {
      * @param options options for the pagination.
      * @see https://npmjs.com/package/@aeroware/discord-utils
      */
-    public paginate(
-        message: Message,
-        pages: MessageEmbed[],
-        options: Parameters<typeof utils.paginate>[2]
-    ) {
+    public paginate(message: Message, pages: MessageEmbed[], options: Parameters<typeof utils.paginate>[2]) {
         utils.paginate(message, pages, options);
         return this;
     }
