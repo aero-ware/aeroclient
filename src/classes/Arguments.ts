@@ -11,7 +11,8 @@ type ArgumentType =
     | "channel"
     | "number"
     | "integer"
-    | "string";
+    | "string"
+    | "boolean";
 
 type Lex = {
     type: ArgumentType;
@@ -26,6 +27,7 @@ const validArgTypes = [
     "number",
     "integer",
     "string",
+    "boolean",
 ];
 
 /**
@@ -125,6 +127,10 @@ export default class Arguments {
                         return false;
                     }
                     break;
+                case "boolean":
+                    return /((y(es)?)|(enabled?)|(on)|(true))|((no?)|(disabled?)|(off)|(false))/.test(
+                        arg
+                    );
             }
         }
 
@@ -147,6 +153,7 @@ export default class Arguments {
             | Channel
             | GuildMember
             | User
+            | boolean
             | undefined
         )[] = [];
 
@@ -176,7 +183,10 @@ export default class Arguments {
                     }
                     break;
                 case "role":
-                    if (!message.guild) return objects.push(undefined);
+                    if (!message.guild) {
+                        objects.push(undefined);
+                        break;
+                    }
                     try {
                         objects.push(
                             (await message.guild.roles.fetch(
@@ -188,7 +198,10 @@ export default class Arguments {
                     }
                     break;
                 case "member":
-                    if (!message.guild) return objects.push(undefined);
+                    if (!message.guild) {
+                        objects.push(undefined);
+                        break;
+                    }
                     try {
                         objects.push(
                             (await message.guild.members.fetch(
@@ -209,6 +222,13 @@ export default class Arguments {
                     } catch {
                         objects.push(undefined);
                     }
+                    break;
+                case "boolean":
+                    if (/(y(es)?)|(enabled?)|(on)|(true)/.test(arg))
+                        objects.push(true);
+                    else if (/(no?)|(disabled?)|(off)|(false)/.test(arg))
+                        objects.push(false);
+                    else objects.push(undefined);
                     break;
             }
         }
