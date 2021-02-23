@@ -24,14 +24,28 @@ const validArgTypes = ["member", "user", "role", "channel", "number", "integer",
 export default class Arguments {
     private static client: AeroClient | undefined;
 
-    private lexicon: Lex[];
+    private readonly lexicon: Lex[];
 
-    private constructor(lexicon: Lex[]) {
+    private readonly __source__: string;
+
+    private constructor(lexicon: Lex[], source: string) {
         if (!Arguments.client) throw new Error("Cannot compile if an AeroClient is not supplied.");
 
-        console.log(lexicon);
+        this.__source__ = source;
 
         this.lexicon = lexicon;
+    }
+
+    public get source() {
+        return this.__source__;
+    }
+
+    public toString() {
+        return this.__source__;
+    }
+
+    public valueOf() {
+        return this.__source__;
     }
 
     /**
@@ -296,7 +310,10 @@ export default class Arguments {
             throw new Error("Invalid argument syntax.");
         });
 
-        return new Arguments(lexicon.sort((a, b) => (a.optional === b.optional ? 0 : a.optional && !b.optional ? 1 : -1)));
+        return new Arguments(
+            lexicon.sort((a, b) => (a.optional === b.optional ? 0 : a.optional && !b.optional ? 1 : -1)),
+            string
+        );
     }
 
     /**
@@ -305,7 +322,7 @@ export default class Arguments {
      * @param lexicon Lexicon to use.
      */
     public static from(lexicon: Lex[]) {
-        return new Arguments(lexicon);
+        return new Arguments(lexicon, "");
     }
 
     /**

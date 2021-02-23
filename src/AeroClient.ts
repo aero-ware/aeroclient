@@ -145,7 +145,7 @@ export default class AeroClient extends Client {
 
                     const commandName = this.clientOptions.allowSpaces ? args.shift() || args.shift() : args.shift();
 
-                    let command = message.content.startsWith(prefix)
+                    let command: Command | undefined = message.content.startsWith(prefix)
                         ? this.commands.get(commandName || "") ||
                           this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")))
                         : undefined;
@@ -232,7 +232,19 @@ export default class AeroClient extends Client {
                         return;
                     }
 
-                    if (
+                    if (command.metasyntax) {
+                        if (!(await command.metasyntax.test(message, args))) {
+                            return message.channel.send(
+                                this.clientOptions.responses?.usage
+                                    ?.replace(/\$COMMAND/g, command.name)
+                                    .replace(/\$PREFIX/g, prefix)
+                                    .replace(/\$USAGE/g, command.metasyntax.source || "") ||
+                                    `The usage of \`${command.name}\` is \`${prefix}${command.name}${
+                                        command.metasyntax.source ? ` ${command.metasyntax.source}` : ""
+                                    }\`.`
+                            );
+                        }
+                    } else if (
                         (command.args && !args.length) ||
                         (command.minArgs && command.minArgs > args.length) ||
                         (command.maxArgs && command.maxArgs < args.length)
@@ -308,6 +320,7 @@ export default class AeroClient extends Client {
                             (await command.callback({
                                 message,
                                 args,
+                                parsed: command.metasyntax && (await command.metasyntax.parse(message, args)),
                                 client: this,
                                 text: message.content,
                                 locale: (await this.localeStore.get(message.author.id)) || "en",

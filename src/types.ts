@@ -1,5 +1,6 @@
-import { ClientEvents, Message, PermissionString } from "discord.js";
+import { Channel, ClientEvents, GuildMember, Message, PermissionString, Role, User } from "discord.js";
 import AeroClient from ".";
+import Arguments from "./classes/Arguments";
 
 /**
  * An event handler that the client will load.
@@ -37,6 +38,7 @@ export type CommandCallback = (
     context: {
         message: Message;
         args: string[];
+        parsed?: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[];
         client: AeroClient;
         text: string;
         locale: string;
@@ -75,6 +77,10 @@ export interface Command {
      * The command's usage.
      */
     usage?: string;
+    /**
+     * Employs an Arguments instance for validation and parsing.
+     */
+    metasyntax?: Arguments;
     /**
      * The command's cooldown in seconds.
      */
