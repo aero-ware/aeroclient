@@ -1,90 +1,73 @@
 import { Channel, GuildMember, Message, Role, User } from "discord.js";
+import ms from "ms";
 import AeroClient from "..";
 
-/**
- * Valid argument types.
- */
-type ArgumentType =
-    | "member"
-    | "user"
-    | "role"
-    | "channel"
-    | "number"
-    | "integer"
-    | "string"
-    | "boolean";
+type ArgumentType = "member" | "user" | "role" | "channel" | "number" | "integer" | "string" | "boolean" | "duration" | "date";
 
 type Lex = {
     type: ArgumentType;
     optional: boolean;
+    or: ArgumentType[];
 };
 
-const validArgTypes = [
-    "member",
-    "user",
-    "role",
-    "channel",
-    "number",
-    "integer",
-    "string",
-    "boolean",
-];
+const validArgTypes = ["member", "user", "role", "channel", "number", "integer", "string", "boolean", "duration", "date"];
 
 /**
- * Handles parsing argument types in a command.
+ * The Arguments class validates and parses arguments according to a constructed lexicon.
+ *
+ * To create an Arguments instance, either use
+ * - Arguments.compile
+ * - Arguments.from
+ *
+ * @class
  */
 export default class Arguments {
-    /**
-     * The client.
-     */
     private static client: AeroClient | undefined;
 
-    /**
-     * The syntax of the command given as an array of Lex.
-     */
     private lexicon: Lex[];
 
-    /**
-     * Creates an instance customized for the command.
-     * @param lexicon the arguments of the command
-     */
     private constructor(lexicon: Lex[]) {
-        if (!Arguments.client)
-            throw new Error("Cannot compile if an AeroClient is not supplied.");
+        if (!Arguments.client) throw new Error("Cannot compile if an AeroClient is not supplied.");
+
+        console.log(lexicon);
 
         this.lexicon = lexicon;
     }
 
     /**
-     * Tests a given message with args for matching the given lexicon.
-     * @param message the message to test content of
-     * @param args the args taken from the message
-     * @returns resolves to the result of the test
+     * Tests a given message with the command arguments for matching the lexicon.
+     *
+     * @param message The message for context.
+     *
+     * @param args The command arguments.
+     *
+     * @returns If the arguments matched the lexicon.
      */
     public async test(message: Message, args: string[]) {
         if (this.requiredArgsLength > args.length) return false;
 
-        for (let i = 0; i < args.length; i++) {
-            const arg = args[i];
-            const lex = this.lexicon[i];
+        async function check(arg: string, lex: Lex) {
+            const notOr = !lex.or.some(
+                async (t) =>
+                    !(await check(arg, {
+                        optional: lex.optional,
+                        or: [],
+                        type: t,
+                    }))
+            );
 
             switch (lex.type) {
                 case "integer":
-                    if (!parseInt(arg)) return false;
+                    if (!parseInt(arg) && notOr) return false;
                     break;
                 case "number":
-                    if (!parseFloat(arg)) return false;
+                    if (!parseFloat(arg) && notOr) return false;
                     break;
                 case "string":
                     break;
                 case "channel":
                     try {
-                        if (
-                            !(await Arguments.client!.channels.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            ))
-                        )
-                            return false;
+                        if (!(await Arguments.client!.channels.fetch(arg.match(/(\d{18})/)?.[0] || "")) && notOr) return false;
                     } catch {
                         return false;
                     }
@@ -92,12 +75,7 @@ export default class Arguments {
                 case "role":
                     if (!message.guild) return false;
                     try {
-                        if (
-                            !(await message.guild.roles.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            ))
-                        )
-                            return false;
+                        if (!(await message.guild.roles.fetch(arg.match(/(\d{18})/)?.[0] || "")) && notOr) return false;
                     } catch {
                         return false;
                     }
@@ -105,33 +83,44 @@ export default class Arguments {
                 case "member":
                     if (!message.guild) return false;
                     try {
-                        if (
-                            !(await message.guild.members.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            ))
-                        )
-                            return false;
+                        if (!(await message.guild.members.fetch(arg.match(/(\d{18})/)?.[0] || "")) && notOr) return false;
                     } catch {
                         return false;
                     }
                     break;
                 case "user":
                     try {
-                        if (
-                            !(await Arguments.client!.users.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            ))
-                        )
-                            return false;
+                        if (!(await Arguments.client!.users.fetch(arg.match(/(\d{18})/)?.[0] || "")) && notOr) return false;
                     } catch {
                         return false;
                     }
                     break;
                 case "boolean":
-                    return /((y(es)?)|(enabled?)|(on)|(true))|((no?)|(disabled?)|(off)|(false))/.test(
-                        arg
-                    );
+                    if (!/((y(es)?)|(enabled?)|(on)|(true))|((no?)|(disabled?)|(off)|(false))/.test(arg) && notOr) return false;
+                    break;
+                case "duration":
+                    if (!ms(arg) && notOr) return false;
+                    break;
+                case "date":
+                    if (
+                        !/\d\d\/\d\d\/\d\d\d\d/.test(arg) &&
+                        !/(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/.test(
+                            arg
+                        ) &&
+                        notOr
+                    )
+                        return false;
+                    break;
             }
+
+            return true;
+        }
+
+        for (let i = 0; i < args.length; i++) {
+            const arg = args[i];
+            const lex = this.lexicon[i];
+
+            if (!(await check(arg, lex))) return false;
         }
 
         return true;
@@ -139,180 +128,195 @@ export default class Arguments {
 
     /**
      * Parses the arguments and returns an array with the parsed values.
-     * @param message the message to parse arguments of
-     * @param args arguments parsed from the message
-     * @returns the parsed values, or an empty array if the arguments did not match the lexicon
+     * @param message The message for context.
+     * @param args The command arguments.
+     * @returns The parsed values, or an empty array if the arguments did not match the lexicon.
      */
     public async parse(message: Message, args: string[]) {
         if (!(await this.test(message, args))) return [];
 
-        const objects: (
-            | number
-            | string
-            | Role
-            | Channel
-            | GuildMember
-            | User
-            | boolean
-            | undefined
-        )[] = [];
+        const objects: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[] = [];
+
+        async function parseArg(
+            arg: string,
+            lex: Lex
+        ): Promise<number | string | Role | Channel | GuildMember | User | Date | boolean | undefined> {
+            const or = await lex.or.reduce<
+                Promise<number | string | Role | Channel | GuildMember | User | Date | boolean | undefined> | undefined
+            >(
+                async (_, type) =>
+                    await parseArg(arg, {
+                        optional: lex.optional,
+                        or: [],
+                        type,
+                    }),
+                undefined
+            );
+
+            switch (lex.type) {
+                case "integer":
+                    return parseInt(arg) || or;
+                case "number":
+                    return parseFloat(arg) || or;
+                case "string":
+                    return arg || or;
+                case "channel":
+                    try {
+                        return (await Arguments.client!.channels.fetch(arg.match(/(\d{18})/)?.[0] || "")) || or;
+                    } catch {
+                        return or;
+                    }
+                case "role":
+                    if (!message.guild) {
+                        return or;
+                    }
+                    try {
+                        return (await message.guild.roles.fetch(arg.match(/(\d{18})/)?.[0] || "")) || or;
+                    } catch {
+                        return or;
+                    }
+                case "member":
+                    if (!message.guild) {
+                        return or;
+                    }
+                    try {
+                        return (await message.guild.members.fetch(arg.match(/(\d{18})/)?.[0] || "")) || or;
+                    } catch {
+                        return or;
+                    }
+                case "user":
+                    try {
+                        return (await Arguments.client!.users.fetch(arg.match(/(\d{18})/)?.[0] || "")) || or;
+                    } catch {
+                        return or;
+                    }
+                case "boolean":
+                    if (/(^y(es)?$)|(^enabled?$)|(^on$)|(^true$)/.test(arg)) return true;
+                    else if (/(^no?$)|(^disabled?$)|(^off$)|(^false$)/.test(arg)) return false;
+                    return or;
+                case "duration":
+                    return ms(arg) || or;
+                case "date":
+                    return new Date(arg).getTime() ? new Date(arg) : or;
+            }
+        }
 
         for (let i = 0; i < args.length; i++) {
             const arg = args[i];
             const lex = this.lexicon[i];
 
-            switch (lex.type) {
-                case "integer":
-                    objects.push(parseInt(arg));
-                    break;
-                case "number":
-                    objects.push(parseFloat(arg));
-                    break;
-                case "string":
-                    objects.push(arg);
-                    break;
-                case "channel":
-                    try {
-                        objects.push(
-                            (await Arguments.client!.channels.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            )) || undefined
-                        );
-                    } catch {
-                        objects.push(undefined);
-                    }
-                    break;
-                case "role":
-                    if (!message.guild) {
-                        objects.push(undefined);
-                        break;
-                    }
-                    try {
-                        objects.push(
-                            (await message.guild.roles.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            )) || undefined
-                        );
-                    } catch {
-                        objects.push(undefined);
-                    }
-                    break;
-                case "member":
-                    if (!message.guild) {
-                        objects.push(undefined);
-                        break;
-                    }
-                    try {
-                        objects.push(
-                            (await message.guild.members.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            )) || undefined
-                        );
-                    } catch {
-                        objects.push(undefined);
-                    }
-                    break;
-                case "user":
-                    try {
-                        objects.push(
-                            (await Arguments.client!.users.fetch(
-                                arg.match(/(\d{18})/)?.[0] || ""
-                            )) || undefined
-                        );
-                    } catch {
-                        objects.push(undefined);
-                    }
-                    break;
-                case "boolean":
-                    if (/(y(es)?)|(enabled?)|(on)|(true)/.test(arg))
-                        objects.push(true);
-                    else if (/(no?)|(disabled?)|(off)|(false)/.test(arg))
-                        objects.push(false);
-                    else objects.push(undefined);
-                    break;
-            }
+            objects.push(await parseArg(arg, lex));
         }
 
         return objects;
     }
 
-    /**
-     * Returns the number of required arguments in the lexicon.
-     */
     private get requiredArgsLength() {
         return this.lexicon.filter((l) => !l.optional).length;
     }
 
-    /**
-     * Returns the number of optional arguments in the lexicon.
-     */
     private get optionalArgsLength() {
         return this.lexicon.filter((l) => l.optional).length;
     }
 
     /**
-     * Turns a usage string with given type into an Arguments instance matching the type.
+     * Compiles a string in argument syntax into an Arguments instance with the matching lexicon.
      *
-     * Wrap an argument in carets `<>` for a required argument.
-     * Wrap an argument in brackets `[]` for an optional argument.
-     * @param string the usage string in the specified format
-     * @param legend an object with each key matching an argument with its typw
+     * - Wrap an argument in angle brackets `<>` for a required argument.
+     *
+     * - Wrap an argument in brackets `[]` for an optional argument.
+     *
+     * - Place `|` between types to accept either type.
+     *
+     * | Type        | Value       |
+     * | ----------- | ----------- |
+     * | "member"    | GuildMember |
+     * | "user"      | User        |
+     * | "role"      | Role        |
+     * | "channel"   | Channel     |
+     * | "number"    | Number      |
+     * | "integer"   | Number      |
+     * | "string"    | String      |
+     * | "boolean"   | Boolean     |
+     * | "duration"  | Number      |
+     * | "date"      | Date        |
+     *
+     * @param string The argument syntax string.
+     *
+     * @param legend An object to use for pure type aliases.
+     *
+     * @example
+     *
+     * ```js
+     * const argumentRegex = Arguments.compile(`<person>`, {
+     *     person: "user",
+     * });
+     * ```
      */
-    public static compile(
-        string: string,
-        legend?: { [key: string]: ArgumentType }
-    ) {
+    public static compile(string: string, legend?: { [key: string]: ArgumentType }) {
         const args = string.split(/\s+/);
 
         const lexicon: Lex[] = args.map((a) => {
-            const type = a.slice(1, a.length - 1);
+            const or = a.slice(1, a.length - 1).split("|") as ArgumentType[];
+            const type = or.shift();
+
+            if (!type) throw new Error(`Argument type is missing.`);
+
             const legendType = legend && legend[type];
 
-            if (legendType && !validArgTypes.includes(legendType))
-                throw new Error(`Invalid argument type: '${legendType}'.`);
+            if (legendType && !validArgTypes.includes(legendType)) throw new Error(`Invalid argument type: '${legendType}'.`);
 
-            if (
-                !(a.startsWith("<") && a.endsWith(">")) &&
-                !(a.startsWith("[") && a.endsWith("]"))
-            )
+            if (!(a.startsWith("<") && a.endsWith(">")) && !(a.startsWith("[") && a.endsWith("]")))
                 throw new Error("Invalid argument syntax.");
 
-            if (!validArgTypes.includes(type) && !legendType)
-                throw new Error(`Invalid argument type: '${type}'.`);
+            if (!validArgTypes.includes(type) && !legendType) throw new Error(`Invalid argument type: '${type}'.`);
+
+            or.forEach((t) => {
+                const legendType = legend && legend[t];
+
+                if (legendType && !validArgTypes.includes(legendType))
+                    throw new Error(`Invalid argument type: '${legendType}'.`);
+
+                if (!validArgTypes.includes(t) && !legendType) throw new Error(`Invalid argument type: '${type}'`);
+            });
 
             if (a.startsWith("<") && a.endsWith(">"))
                 return {
                     type: (legendType || type) as ArgumentType,
                     optional: false,
+                    or,
                 };
             if (a.startsWith("[") && a.endsWith("]"))
                 return {
                     type: (legendType || type) as ArgumentType,
                     optional: true,
+                    or,
                 };
 
             throw new Error("Invalid argument syntax.");
         });
 
-        return new Arguments(
-            lexicon.sort((a, b) =>
-                a.optional === b.optional
-                    ? 0
-                    : a.optional && !b.optional
-                    ? 1
-                    : -1
-            )
-        );
+        return new Arguments(lexicon.sort((a, b) => (a.optional === b.optional ? 0 : a.optional && !b.optional ? 1 : -1)));
     }
 
     /**
-     * sets the private static client field of the class.
-     * @param client the client
-     * @returns this instance
+     * Creates an instance from a given lexicon.
+     *
+     * @param lexicon Lexicon to use.
      */
-    public static setClient(client: AeroClient) {
+    public static from(lexicon: Lex[]) {
+        return new Arguments(lexicon);
+    }
+
+    /**
+     * Uses the provided client for interacting with the Discord API.
+     *
+     * @param client The client to use.
+     * @returns Arguments
+     */
+    public static use(client: AeroClient) {
         Arguments.client = client;
 
-        return this;
+        return Arguments;
     }
 }
