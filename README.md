@@ -25,6 +25,10 @@ The docs for this framework can be found [here](https://aero-ware.github.io/aero
         -   `guildOnly` if the command can only be executed in a guild
         -   `hidden` if the command should be hidden from the help command
     -   Automatic incorrect usage reply
+-   Extremely powerful argument validation and parsing
+    -   Compile metasyntax
+    -   Validate arguments
+    -   Parse arguments into objects for usage
 -   Automatic loading
     -   Events
     -   Commands
