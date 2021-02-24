@@ -271,3 +271,13 @@ export interface AeroClientOptions {
  * All supported locales.
  */
 export type Locales = "ar" | "en" | "fr" | "zh" | "de" | "pt" | "ru" | "es";
+
+/**
+ * Options support by the Ratelimit class.
+ */
+export interface RatelimitOptions {
+    calls: number;
+    per: "second" | "minute" | "hour" | "day";
+    clear?: boolean;
+    recharge?: number;
+}
