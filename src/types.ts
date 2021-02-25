@@ -38,7 +38,7 @@ export type CommandCallback = (
     context: {
         message: Message;
         args: string[];
-        parsed?: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[];
+        parsed: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[];
         client: AeroClient;
         text: string;
         locale: string;

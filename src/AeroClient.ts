@@ -1,7 +1,10 @@
 import utils from "@aeroware/discord-utils";
 import Logger from "@aeroware/logger";
+import axios from "axios";
 import parse from "discord-parse-utils";
 import { Channel, Client, ClientOptions, Collection, Message, MessageEmbed, TextChannel } from "discord.js";
+import dotenv from "dotenv";
+import fs from "fs";
 import Keyv from "keyv";
 import ms from "ms";
 import { DiscordInteractions, Interaction } from "slash-commands";
@@ -51,25 +54,84 @@ export default class AeroClient extends Client {
      * The default prefix for the bot. Used in DMs and in guilds where a custom prefix is not set.
      */
     public defaultPrefix = "!";
+    /**
+     * Utility regex.
+     */
+    public regex = {
+        user: /<@!?(\d{18})>/g,
+        role: /<@&(\d{18})>/g,
+        channel: /<@#(\d{18})>/g,
+        imageAttachment: /\.(png|jpg|jpeg|webp)$/gi,
+        inviteLink: /discord\.gg\//gi,
+        giftLink: /discord\.gift\//gi,
+        emoji: /:(\w+):/g,
+        httpOrHttps: /https?:\/\//gi,
+        boldText: /\*\*(.*)\*\*/g,
+        italicText: /(?:\*(.*)\*)|(?:_(.*)_)/g,
+        underlinedText: /__(.*)__/g,
+        strikethroughText: /~~(.*)~~/g,
+        codeblock: /```(\w+)(.*)```/gs,
+        quote: /> +/,
+    };
+    /**
+     * Literally axios
+     */
+    public http = axios;
+    /**
+     * AeroClient global namespace.
+     */
+    public global: {
+        [prop: string]: any;
+    } = {};
+
     private cooldowns = new Collection<string, Collection<string, number>>();
     private cooldownStore?: Keyv<string>;
     private loader = new Loader(this);
     private middlewares = Pipeline<MiddlewareContext>();
     private logChannel: Channel | undefined;
 
+    private static configFiles = [
+        "aeroclient.conf",
+        "aeroclient.env",
+        "aeroclient.json",
+        "aeroclient.config.js",
+        "aeroclient.config.ts",
+    ];
+
     /**
      * Takes options and constructs a new AeroClient.
      * @param options Options to customize the AeroClient.
      * @param baseOptions Options for the regular trash client.
      */
-    public constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
+    public constructor(options?: AeroClientOptions, baseOptions?: ClientOptions) {
         super(baseOptions);
+
+        this.logger = new Logger(
+            (options && options.loggerHeader) || "aeroclient",
+            (options && options.loggerShowFlags) || false
+        );
+
+        if (!options) {
+            AeroClient.configFiles.forEach(async (fileName) => {
+                if (fs.existsSync(`${require.main?.path}/${fileName}`)) {
+                    try {
+                        if (/\.[tj]s$/.test(fileName) || fileName.endsWith("json"))
+                            options = (await import(`${require.main?.path}/${fileName}`)).default;
+                        else options = dotenv.parse(fs.readFileSync(`${require.main?.path}/${fileName}`, "utf8").toString());
+
+                        this.logger.success(`Loaded config from ${fileName}.`);
+                    } catch {
+                        this.logger.error(`Failed to load ${fileName}.`);
+                    }
+                }
+            });
+
+            if (!options) throw new Error(`No options or config files were found.`);
+        }
 
         this.clientOptions = options;
 
         this.init(options);
-
-        this.logger = new Logger(options.loggerHeader || "aeroclient", options.loggerShowFlags || false);
 
         this.prefixes = new Keyv<string>(options.connectionUri, {
             namespace: "prefixes",
@@ -320,7 +382,7 @@ export default class AeroClient extends Client {
                             (await command.callback({
                                 message,
                                 args,
-                                parsed: command.metasyntax && (await command.metasyntax.parse(message, args)),
+                                parsed: (command.metasyntax && (await command.metasyntax.parse(message, args))) || [],
                                 client: this,
                                 text: message.content,
                                 locale: (await this.localeStore.get(message.author.id)) || "en",
