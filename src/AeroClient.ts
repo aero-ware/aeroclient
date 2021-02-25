@@ -103,8 +103,10 @@ export default class AeroClient extends Client {
      * @param options Options to customize the AeroClient.
      * @param baseOptions Options for the regular trash client.
      */
-    public constructor(options?: AeroClientOptions, baseOptions?: ClientOptions) {
+    public constructor(clientOptions?: AeroClientOptions, baseOptions?: ClientOptions) {
         super(baseOptions);
+
+        let options = clientOptions;
 
         this.logger = new Logger(
             (options && options.loggerHeader) || "aeroclient",
