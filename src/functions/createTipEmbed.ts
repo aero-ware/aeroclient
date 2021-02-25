@@ -1,6 +1,6 @@
 import { MessageEmbed, MessageEmbedOptions } from "discord.js";
 
-export default function TipEmbed(
+export default function createTipEmbed(
     tips: string[],
     options?: {
         color?: string;
@@ -10,7 +10,7 @@ export default function TipEmbed(
             chance: number;
         };
     }
-) {
+): typeof MessageEmbed {
     return class TipEmbed extends MessageEmbed {
         static footers = tips;
         static easterEggs = options && options.easterEggs && options.easterEggs.eggs;

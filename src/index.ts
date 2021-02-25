@@ -4,7 +4,7 @@ import AeroClient from "./AeroClient";
 import AeroEmbed from "./classes/AeroEmbed";
 import Arguments from "./classes/Arguments";
 import Ratelimit from "./classes/Ratelimit";
-import TipEmbed from "./functions/TipEmbed";
+import createTipEmbed from "./functions/createTipEmbed";
 
-export { utils, Logger, TipEmbed, AeroEmbed, Arguments, Ratelimit };
+export { utils, Logger, createTipEmbed, AeroEmbed, Arguments, Ratelimit };
 export default AeroClient;

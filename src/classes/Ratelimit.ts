@@ -16,7 +16,13 @@ const timeToMs: Record<Time, number> = {
  * @class
  */
 export default class Ratelimit {
+    /**
+     * @private
+     */
     private options: RatelimitOptions;
+    /**
+     * @private
+     */
     private users = new Map<
         string,
         {

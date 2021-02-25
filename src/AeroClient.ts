@@ -16,6 +16,9 @@ import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types"
 
 /**
  * The AeroClient extends the discord.js Client class to offer more features.
+ *
+ * If you are using config files, please use `AeroClient.create` instead of the constructor.
+ * @class
  */
 export default class AeroClient extends Client {
     /**
@@ -85,10 +88,25 @@ export default class AeroClient extends Client {
         [prop: string]: any;
     } = {};
 
+    /**
+     * @private
+     */
     private cooldowns = new Collection<string, Collection<string, number>>();
+    /**
+     * @private
+     */
     private cooldownStore?: Keyv<string>;
+    /**
+     * @private
+     */
     private loader = new Loader(this);
+    /**
+     * @private
+     */
     private middlewares = Pipeline<MiddlewareContext>();
+    /**
+     * @private
+     */
     private logChannel: Channel | undefined;
 
     private static configFiles = [
@@ -136,6 +154,9 @@ export default class AeroClient extends Client {
         if (options.useDefaults) registerDefaults(this);
     }
 
+    /**
+     * @private
+     */
     private async init(options: AeroClientOptions) {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadEvents(options.eventsPath);
