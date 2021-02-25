@@ -8,6 +8,7 @@ import fs from "fs";
 import Keyv from "keyv";
 import ms from "ms";
 import { DiscordInteractions, Interaction } from "slash-commands";
+import Ratelimit from "./classes/Ratelimit";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
@@ -314,6 +315,8 @@ export default class AeroClient extends Client {
 
                     const now = Date.now();
 
+                    if (command.ratelimit instanceof Ratelimit) {
+                    }
                     let timestamps = this.cooldownStore
                         ? JSON.parse((await this.cooldownStore.get(command.name)) || "{}")
                         : this.cooldowns.get(command.name);
@@ -326,7 +329,7 @@ export default class AeroClient extends Client {
                         timestamps = tCollection;
                     }
 
-                    if (timestamps.has(message.author.id)) {
+                    if (timestamps.has(message.author.id) && !command.ratelimit) {
                         const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
 
                         if (now < expirationTime) {
@@ -353,6 +356,14 @@ export default class AeroClient extends Client {
                                         : `Please wait ${formattedTime} before reusing the \`${command.name}\` command.`
                                 );
                         }
+                    } else if (command.ratelimit) {
+                        if (command.ratelimit.check(message.author.id)) {
+                            return message.channel.send(
+                                this.clientOptions.responses && this.clientOptions.responses.ratelimit
+                                    ? this.clientOptions.responses.ratelimit.replace(/\$COMMAND/g, command.name)
+                                    : `You are being ratelimited.`
+                            );
+                        }
                     }
 
                     try {
@@ -366,13 +377,17 @@ export default class AeroClient extends Client {
                                 locale: (await this.localeStore.get(message.author.id)) || "en",
                             })) !== "invalid"
                         ) {
-                            timestamps!.set(message.author.id, now);
-                            if (this.cooldownStore) {
-                                const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
+                            if (!command.ratelimit) {
+                                timestamps!.set(message.author.id, now);
+                                if (this.cooldownStore) {
+                                    const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
-                                cooldownObj[message.author.id] = now;
+                                    cooldownObj[message.author.id] = now;
 
-                                await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                                    await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                                }
+                            } else {
+                                command.ratelimit.add(message.author.id);
                             }
                         }
                     } catch (err) {

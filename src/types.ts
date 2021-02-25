@@ -1,6 +1,7 @@
 import { Channel, ClientEvents, GuildMember, Message, PermissionString, Role, User } from "discord.js";
 import AeroClient from ".";
 import Arguments from "./classes/Arguments";
+import Ratelimit from "./classes/Ratelimit";
 
 /**
  * An event handler that the client will load.
@@ -81,6 +82,10 @@ export interface Command {
      * Employs an Arguments instance for validation and parsing.
      */
     metasyntax?: Arguments;
+    /**
+     * Employs  Ratelimit instance for ratelimiting users.
+     */
+    ratelimit?: Ratelimit;
     /**
      * The command's cooldown in seconds.
      */
@@ -179,6 +184,10 @@ export type ResponseInfo = {
      * Response to send when someone has insufficient perms to run a command.
      */
     perms?: string;
+    /**
+     * Response to send when a user is being ratelimited.
+     */
+    ratelimit?: string;
 };
 
 /**

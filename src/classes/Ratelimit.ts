@@ -1,5 +1,3 @@
-// ! EXPERIMENTAL
-
 import { RatelimitOptions } from "../types";
 
 type Time = "second" | "minute" | "hour" | "day";
@@ -99,7 +97,7 @@ export default class Ratelimit {
      * @param id ID to check.
      */
     public check(id: string) {
-        return this.users.has(id) && this.users.get(id)!.calls < this.options.calls;
+        return this.users.has(id) && this.users.get(id)!.calls > this.options.calls;
     }
 
     /**
