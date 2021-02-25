@@ -103,33 +103,13 @@ export default class AeroClient extends Client {
      * @param options Options to customize the AeroClient.
      * @param baseOptions Options for the regular trash client.
      */
-    public constructor(clientOptions?: AeroClientOptions, baseOptions?: ClientOptions) {
+    public constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
         super(baseOptions);
-
-        let options = clientOptions;
 
         this.logger = new Logger(
             (options && options.loggerHeader) || "aeroclient",
             (options && options.loggerShowFlags) || false
         );
-
-        if (!options) {
-            AeroClient.configFiles.forEach(async (fileName) => {
-                if (fs.existsSync(`${require.main?.path}/${fileName}`)) {
-                    try {
-                        if (/\.[tj]s$/.test(fileName) || fileName.endsWith("json"))
-                            options = (await import(`${require.main?.path}/${fileName}`)).default;
-                        else options = dotenv.parse(fs.readFileSync(`${require.main?.path}/${fileName}`, "utf8").toString());
-
-                        this.logger.success(`Loaded config from ${fileName}.`);
-                    } catch {
-                        this.logger.error(`Failed to load ${fileName}.`);
-                    }
-                }
-            });
-
-            if (!options) throw new Error(`No options or config files were found.`);
-        }
 
         this.clientOptions = options;
 
@@ -155,10 +135,6 @@ export default class AeroClient extends Client {
         if (options.useDefaults) registerDefaults(this);
     }
 
-    /**
-     * Private async method to initiate the client and start it up.
-     * @param options Options to customize the AeroClient.
-     */
     private async init(options: AeroClientOptions) {
         if (options.commandsPath) await this.loadCommands(options.commandsPath);
         if (options.eventsPath) await this.loadEvents(options.eventsPath);
@@ -500,5 +476,41 @@ export default class AeroClient extends Client {
             authToken: this.clientOptions.token!,
             publicKey: key,
         });
+    }
+
+    /**
+     * Takes options and constructs a new AeroClient.
+     *
+     * If you are using external config files, make sure you use this instead of the constructor.
+     * @param options Options to customize the AeroClient.
+     * @param baseOptions Options for the regular trash client.
+     */
+    public static async create(clientOptions?: AeroClientOptions, baseOptions?: ClientOptions) {
+        let options = clientOptions;
+
+        const logger = new Logger("config");
+
+        if (!options) {
+            await Promise.all(
+                AeroClient.configFiles.map(async (fileName) => {
+                    if (fs.existsSync(`${require.main?.path}/${fileName}`)) {
+                        try {
+                            if (/\.[tj]s$/.test(fileName) || fileName.endsWith("json"))
+                                options = (await import(`${require.main?.path}/${fileName}`)).default;
+                            else
+                                options = dotenv.parse(fs.readFileSync(`${require.main?.path}/${fileName}`, "utf8").toString());
+
+                            logger.success(`Loaded config from ${fileName}.`);
+                        } catch {
+                            logger.error(`Failed to load ${fileName}.`);
+                        }
+                    }
+                })
+            );
+
+            if (!options) throw new Error(`No options or config files were found.`);
+        }
+
+        return new AeroClient(options, baseOptions);
     }
 }
