@@ -6,8 +6,6 @@ read msg
 
 git commit -m "$msg"
 
-git push
-
 tsc
 
 version=${1:-"minor"}
@@ -15,3 +13,5 @@ version=${1:-"minor"}
 npm version $version
 
 npm publish --access public
+
+git push
