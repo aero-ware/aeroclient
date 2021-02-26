@@ -80,7 +80,7 @@ export default class Loader {
      * @param path Directory to load.
      */
     public async loadEvents(path: string) {
-        const directory = require.main?.path ? `${require.main.path}/${path}` : path;
+        const directory = require.main?.path ? join(require.main.path!, path) : path;
 
         const names = new Set<string>();
 
@@ -118,7 +118,7 @@ export default class Loader {
      * @param path Path to load the JSON (file extension must be included)
      */
     public async loadMessages(path: string) {
-        const file = require.main?.path ? `${require.main.path}/${path}` : path;
+        const file = require.main?.path ? join(require.main.path!, path) : path;
 
         const json = JSON.parse(
             await readFile(file, {
@@ -142,7 +142,7 @@ export default class Loader {
      * @param dir the directory to read the locale files from
      */
     public async loadLocales(dir: string) {
-        const path = `${require.main?.path}/${dir}`;
+        const path = require.main?.path ? join(require.main.path!, dir) : dir;
         const files = await readdir(path, {
             withFileTypes: true,
         });
@@ -156,7 +156,7 @@ export default class Loader {
 
                     if (locales.includes(name)) {
                         this.client.locales[name as Locales] = JSON.parse(
-                            await readFile(`${path}/${f.name}`, {
+                            await readFile(join(path, f.name), {
                                 encoding: "utf-8",
                             })
                         );

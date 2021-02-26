@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import Keyv from "keyv";
 import ms from "ms";
+import { join } from "path";
 import { DiscordInteractions, Interaction } from "slash-commands";
 import Ratelimit from "./classes/Ratelimit";
 import registerDefaults from "./client/defaults";
@@ -529,12 +530,12 @@ export default class AeroClient extends Client {
         if (!options) {
             await Promise.all(
                 AeroClient.configFiles.map(async (fileName) => {
-                    if (fs.existsSync(`${require.main?.path}/${fileName}`)) {
+                    if (fs.existsSync(join(require.main?.path!, fileName))) {
                         try {
                             if (/\.[tj]s$/.test(fileName) || fileName.endsWith("json"))
-                                options = (await import(`${require.main?.path}/${fileName}`)).default;
+                                options = (await import(join(require.main?.path!, fileName))).default;
                             else
-                                options = dotenv.parse(fs.readFileSync(`${require.main?.path}/${fileName}`, "utf8").toString());
+                                options = dotenv.parse(fs.readFileSync(join(require.main?.path!, fileName), "utf8").toString());
 
                             logger.success(`Loaded config from ${fileName}.`);
                         } catch {
