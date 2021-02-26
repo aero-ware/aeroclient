@@ -91,6 +91,10 @@ export interface Command {
      */
     cooldown?: number;
     /**
+     * The command's server cooldown in seconds.
+     */
+    serverCooldown?: number;
+    /**
      * Description of the command.
      */
     description?: string;

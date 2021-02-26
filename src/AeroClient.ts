@@ -9,7 +9,6 @@ import Keyv from "keyv";
 import ms from "ms";
 import { join } from "path";
 import { DiscordInteractions, Interaction } from "slash-commands";
-import Ratelimit from "./classes/Ratelimit";
 import registerDefaults from "./client/defaults";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
@@ -96,7 +95,15 @@ export default class AeroClient extends Client {
     /**
      * @private
      */
+    private serverCooldowns = new Collection<string, Collection<string, number>>();
+    /**
+     * @private
+     */
     private cooldownStore?: Keyv<string>;
+    /**
+     * @private
+     */
+    private serverCooldownStore?: Keyv<string>;
     /**
      * @private
      */
@@ -139,10 +146,15 @@ export default class AeroClient extends Client {
             namespace: "prefixes",
         });
 
-        if (options.persistentCooldowns)
+        if (options.persistentCooldowns) {
             this.cooldownStore = new Keyv<string>(options.connectionUri, {
                 namespace: "cooldowns",
             });
+
+            this.serverCooldownStore = new Keyv<string>(options.connectionUri, {
+                namespace: "serverCooldowns",
+            });
+        }
 
         this.localeStore = new Keyv<string>(options.connectionUri, { namespace: "locales" });
 
@@ -335,15 +347,29 @@ export default class AeroClient extends Client {
                         }
                     }
 
+                    if (!this.serverCooldowns.has(command.name)) {
+                        this.serverCooldowns.set(command.name, new Collection());
+
+                        if (this.serverCooldownStore && message.guild) {
+                            const cooldownObj = JSON.parse((await this.serverCooldownStore.get(command.name)) || "{}");
+
+                            cooldownObj[message.guild.id] = 0;
+
+                            await this.serverCooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                        }
+                    }
+
                     const now = Date.now();
 
-                    if (command.ratelimit instanceof Ratelimit) {
-                    }
-                    let timestamps = this.cooldownStore
-                        ? JSON.parse((await this.cooldownStore.get(command.name)) || "{}")
-                        : this.cooldowns.get(command.name);
+                    let timestamps = command.cooldown
+                        ? this.cooldownStore
+                            ? JSON.parse((await this.cooldownStore.get(command.name)) || "{}")
+                            : this.cooldowns.get(command.name)
+                        : this.serverCooldownStore
+                        ? JSON.parse((await this.serverCooldownStore.get(command.name)) || "{}")
+                        : this.serverCooldowns.get(command.name);
 
-                    const cooldownAmount = (command.cooldown || 0) * 1000;
+                    const cooldownAmount = (command.serverCooldown || command.cooldown || 0) * 1000;
 
                     if (!(timestamps instanceof Collection)) {
                         const tCollection = new Collection<string, number>();
@@ -351,8 +377,13 @@ export default class AeroClient extends Client {
                         timestamps = tCollection;
                     }
 
-                    if (timestamps.has(message.author.id) && !command.ratelimit) {
-                        const expirationTime = timestamps!.get(message.author.id)! + cooldownAmount;
+                    if (
+                        (timestamps.has(message.author.id) || timestamps.has(message.guild && message.guild.id)) &&
+                        !command.ratelimit
+                    ) {
+                        const expirationTime =
+                            (timestamps!.get(message.author.id) || timestamps!.get(message.guild && message.guild.id))! +
+                            cooldownAmount;
 
                         if (now < expirationTime) {
                             const timeLeft = expirationTime - now;
@@ -400,7 +431,10 @@ export default class AeroClient extends Client {
                             })) !== "invalid"
                         ) {
                             if (!command.ratelimit) {
-                                timestamps!.set(message.author.id, now);
+                                timestamps!.set(
+                                    command.serverCooldown && message.guild ? message.guild.id : message.author.id,
+                                    now
+                                );
                                 if (this.cooldownStore) {
                                     const cooldownObj = JSON.parse((await this.cooldownStore.get(command.name)) || "{}");
 
@@ -408,6 +442,14 @@ export default class AeroClient extends Client {
 
                                     await this.cooldownStore.set(command.name, JSON.stringify(cooldownObj));
                                 }
+                                if (this.serverCooldownStore) {
+                                    const cooldownObj = JSON.parse((await this.serverCooldownStore.get(command.name)) || "{}");
+
+                                    cooldownObj[message.author.id] = now;
+
+                                    await this.serverCooldownStore.set(command.name, JSON.stringify(cooldownObj));
+                                }
+                                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
                             } else {
                                 command.ratelimit.add(message.author.id);
                             }

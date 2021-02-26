@@ -61,6 +61,20 @@ export default class Loader {
                     continue;
                 }
 
+                if (file.cooldown && file.serverCooldown) {
+                    if (this.client.clientOptions.logging)
+                        this.client.logger.warn(
+                            `'${command}' has both a cooldown and server cooldown. Commands cannot have both.`
+                        );
+                    continue;
+                }
+
+                if (file.serverCooldown && !file.guildOnly) {
+                    if (this.client.clientOptions.logging)
+                        this.client.logger.warn(`'${command}' has a server cooldown but is not guild only.`);
+                    continue;
+                }
+
                 if (names.has(file.name)) {
                     if (this.client.clientOptions.logging) this.client.logger.warn(`Found duplicate command '${file.name}'.`);
                     continue;
