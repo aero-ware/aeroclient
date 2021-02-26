@@ -1,4 +1,12 @@
-import { Channel, ClientEvents, GuildMember, Message, PermissionString, Role, User } from "discord.js";
+import {
+    Channel,
+    ClientEvents,
+    GuildMember,
+    Message,
+    PermissionString,
+    Role,
+    User,
+} from "discord.js";
 import AeroClient from ".";
 import Arguments from "./classes/Arguments";
 import Ratelimit from "./classes/Ratelimit";
@@ -39,7 +47,17 @@ export type CommandCallback = (
     context: {
         message: Message;
         args: string[];
-        parsed: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[];
+        parsed: (
+            | number
+            | string
+            | Role
+            | Channel
+            | GuildMember
+            | User
+            | Date
+            | boolean
+            | undefined
+        )[];
         client: AeroClient;
         text: string;
         locale: string;
@@ -111,6 +129,10 @@ export interface Command {
      */
     staffOnly?: boolean;
     /**
+     * Can this command only be executed in a test server?
+     */
+    testOnly?: boolean;
+    /**
      * Can this command only be executed in a direct message?
      */
     dmOnly?: boolean;
@@ -168,6 +190,10 @@ export type ResponseInfo = {
      * Response to send when a guild only command is used in a direct message.
      */
     guild?: string;
+    /**
+     * Response to send when a test server only command is used elsewhere.
+     */
+    test?: string;
     /**
      * Response to send when an attempt to disable a guarded command fails.
      */
@@ -254,6 +280,10 @@ export interface AeroClientOptions {
      * Array of ids of staff users.
      */
     staff?: string[];
+    /**
+     * Array of IDs of test servers.
+     */
+    testServers?: string[];
     /**
      * ID of the error log channel.
      */
