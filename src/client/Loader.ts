@@ -7,7 +7,7 @@ export default class Loader {
     private client: AeroClient;
 
     /**
-     * Creates a Loder given a client.
+     * Creates a Loader given a client.
      * @param client the client that called this loader.
      */
     constructor(client: AeroClient) {

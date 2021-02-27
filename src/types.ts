@@ -286,16 +286,25 @@ export interface AeroClientOptions {
      * Options for development.
      */
     dev?: {
+        /**
+         * Do not load these things into the client.
+         */
         dontLoad?: {
             categories?: string[];
             commands?: string[];
             events?: string[];
             folders?: string[];
         };
+        /**
+         * Include eval commands?
+         */
         eval?: {
             console?: boolean;
             command?: boolean;
         };
+        /**
+         * Include info events?
+         */
         events?: {
             debug?: boolean;
             error?: boolean;
