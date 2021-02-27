@@ -283,7 +283,7 @@ export interface AeroClientOptions {
      */
     experimentalSubcommands?: boolean;
     /**
-     * Options for development.
+     * Options for development. [BETA DO NOT USE]
      */
     dev?: {
         /**
