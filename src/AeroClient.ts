@@ -266,6 +266,7 @@ export default class AeroClient extends Client {
                         return;
                     }
 
+                    //! doesnt work soooo
                     if (this.clientOptions.experimentalSubcommands)
                         while (command.hasSubcommands) {
                             const commandName = args.shift();
