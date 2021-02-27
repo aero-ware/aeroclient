@@ -3,10 +3,8 @@ src/
 publish.sh
 .eslintcache
 *.png
-*.md
 node_modules
 .env
 *.test.ts
 *.test.js
 .gitignore
-tsconfig.json
