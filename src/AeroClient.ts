@@ -10,6 +10,7 @@ import ms from "ms";
 import { join } from "path";
 import { DiscordInteractions, Interaction } from "slash-commands";
 import registerDefaults from "./client/defaults";
+import devOptions from "./client/dev";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
 import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types";
@@ -166,7 +167,7 @@ export default class AeroClient extends Client {
 
         if (options.useDefaults) registerDefaults(this);
 
-        // if (options.dev) devOptions(this);
+        if (options.dev) devOptions(this);
     }
 
     /**

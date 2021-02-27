@@ -19,7 +19,7 @@ export default class Loader {
      * @param path Directory to load.
      */
     public async loadCommands(path: string) {
-        // if (this.client.clientOptions.dev?.dontLoad?.folders?.includes(path)) return;
+        if (this.client.clientOptions.dev?.dontLoad?.folders?.includes(path)) return;
 
         const directory = require.main?.path ? `${require.main.path}/${path}` : path;
 
@@ -32,15 +32,14 @@ export default class Loader {
                 const filePath = join(directory, command);
 
                 if ((await stat(filePath)).isDirectory()) {
-                    // if (!this.client.clientOptions.dev?.dontLoad?.folders?.includes(command))
-                    await traverse(filePath);
+                    if (!this.client.clientOptions.dev?.dontLoad?.folders?.includes(command)) await traverse(filePath);
                     continue;
                 }
 
                 const file = (await import(filePath)).default;
 
-                // if (this.client.clientOptions.dev?.dontLoad?.commands?.includes(file.name)) continue;
-                // if (this.client.clientOptions.dev?.dontLoad?.categories?.includes(file.category)) continue;
+                if (this.client.clientOptions.dev?.dontLoad?.commands?.includes(file.name)) continue;
+                if (this.client.clientOptions.dev?.dontLoad?.categories?.includes(file.category)) continue;
 
                 if (typeof file === "function") {
                     file(this.client);
@@ -100,7 +99,7 @@ export default class Loader {
      * @param path Directory to load.
      */
     public async loadEvents(path: string) {
-        // if (this.client.clientOptions.dev?.dontLoad?.folders?.includes(path)) return;
+        if (this.client.clientOptions.dev?.dontLoad?.folders?.includes(path)) return;
 
         const directory = require.main?.path ? join(require.main.path!, path) : path;
 
@@ -113,14 +112,13 @@ export default class Loader {
                 const filePath = join(directory, event);
 
                 if ((await stat(filePath)).isDirectory()) {
-                    // if (!this.client.clientOptions.dev?.dontLoad?.folders?.includes(event))
-                    await traverse(filePath);
+                    if (!this.client.clientOptions.dev?.dontLoad?.folders?.includes(event)) await traverse(filePath);
                     continue;
                 }
 
                 const file: EventHandler = (await import(filePath)).default;
 
-                // if (this.client.clientOptions.dev?.dontLoad?.events?.includes(file.name)) continue;
+                if (this.client.clientOptions.dev?.dontLoad?.events?.includes(file.name)) continue;
 
                 if (names.has(file.name)) {
                     if (this.client.clientOptions.logging) this.client.logger.warn(`Found a duplicate event '${file.name}'`);
