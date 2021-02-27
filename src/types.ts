@@ -279,11 +279,11 @@ export interface AeroClientOptions {
      */
     disableStaffCooldowns?: boolean;
     /**
-     * Enable experimental subcommands?
+     * Enable experimental subcommands? [BROKEN]
      */
     experimentalSubcommands?: boolean;
     /**
-     * Options for development. [BETA DO NOT USE]
+     * Options for development.
      */
     dev?: {
         /**
