@@ -1,12 +1,4 @@
-import {
-    Channel,
-    ClientEvents,
-    GuildMember,
-    Message,
-    PermissionString,
-    Role,
-    User,
-} from "discord.js";
+import { Channel, ClientEvents, GuildMember, Message, PermissionString, Role, User } from "discord.js";
 import AeroClient from ".";
 import Arguments from "./classes/Arguments";
 import Ratelimit from "./classes/Ratelimit";
@@ -47,17 +39,7 @@ export type CommandCallback = (
     context: {
         message: Message;
         args: string[];
-        parsed: (
-            | number
-            | string
-            | Role
-            | Channel
-            | GuildMember
-            | User
-            | Date
-            | boolean
-            | undefined
-        )[];
+        parsed: (number | string | Role | Channel | GuildMember | User | Date | boolean | undefined)[];
         client: AeroClient;
         text: string;
         locale: string;
@@ -300,6 +282,25 @@ export interface AeroClientOptions {
      * Enable experimental subcommands?
      */
     experimentalSubcommands?: boolean;
+    /**
+     * Options for development.
+     */
+    dev?: {
+        dontLoad?: {
+            categories?: string[];
+            commands?: string[];
+            events?: string[];
+            folders?: string[];
+        };
+        eval?: {
+            console?: boolean;
+            command?: boolean;
+        };
+        events?: {
+            debug?: boolean;
+            error?: boolean;
+        };
+    };
     /**
      * Custom handler instead of default one.
      */
