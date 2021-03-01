@@ -130,7 +130,7 @@ function App() {
                                 Welcome!
                             </h2>
                             <p>
-                                Welcome to the AeroClient v2 documentation.
+                                Welcome to the AeroClient v3 documentation.
                                 <br />
                                 <a href="#documentation" className="red">
                                     Click here skip the welcome section.
