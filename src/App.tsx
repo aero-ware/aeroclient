@@ -75,6 +75,13 @@ function App() {
                                 <a href="#arguments-methods">Methods</a>
                                 <br />
                             </div>
+                            <a href="#ratelimit">Ratelimit</a>
+                            <div className="t">
+                                <a href="#ratelimit-static">Static Methods</a>
+                                <br />
+                                <a href="#ratelimit-methods">Methods</a>
+                                <br />
+                            </div>
                             <a href="#aeroembed">AeroEmbed</a>
                             <br />
                             <a href="#tipembed">TipEmbed</a>
@@ -97,9 +104,7 @@ function App() {
                                 <div className="t">
                                     <a href="#stopwatch">Stopwatch</a>
                                     <div className="t">
-                                        <a href="#stopwatch-properties">
-                                            Properties
-                                        </a>
+                                        <a href="#stopwatch-properties">Properties</a>
                                         <br />
                                         <a href="#stopwatch-methods">Methods</a>
                                     </div>
@@ -133,14 +138,11 @@ function App() {
                             </p>
                             <h3>About</h3>
                             <p>
-                                AeroClient is a discord.js framework that
-                                focuses on customization.
+                                AeroClient is a discord.js framework that focuses on customization.
                                 <br />
-                                It is fully customizable due to the many options
-                                and flags you can set.
+                                It is fully customizable due to the many options and flags you can set.
                                 <br />
-                                AeroClient also features something new in
-                                discord.js frameworks: middleware.
+                                AeroClient also features something new in discord.js frameworks: middleware.
                             </p>
                             <p>In short, AeroClient is</p>
                             <ul>
@@ -149,10 +151,7 @@ function App() {
                                 <li>flexible;</li>
                                 <li>and easy to use.</li>
                             </ul>
-                            <p>
-                                Also, since AeroClient is written in TypeScript,
-                                it provides it's own typings.
-                            </p>
+                            <p>Also, since AeroClient is written in TypeScript, it provides it's own typings.</p>
                             <h3>Example (using ES6 import/export)</h3>
                             <pre>
                                 <code>
@@ -195,8 +194,7 @@ const client = new AeroClient({
                                     @aeroware/logger
                                 </a>
                                 <br />
-                                AeroWare's own extremely minimal logging
-                                utility.
+                                AeroWare's own extremely minimal logging utility.
                             </p>
                             <p>
                                 <a
@@ -208,74 +206,44 @@ const client = new AeroClient({
                                     @aeroware/discord-utils
                                 </a>
                                 <br />
-                                AeroWare's small package that contains many
-                                utilities for discord.js
+                                AeroWare's small package that contains many utilities for discord.js
                             </p>
                             <p>
-                                <a
-                                    href="http://npmjs.com/package/date-fns"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="red"
-                                >
+                                <a href="http://npmjs.com/package/date-fns" target="_blank" rel="noreferrer" className="red">
                                     date-fns
                                 </a>
                                 <br />A formatting utility for dates and time.
                             </p>
                             <p>
-                                <a
-                                    href="http://npmjs.com/package/ms"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="red"
-                                >
+                                <a href="http://npmjs.com/package/ms" target="_blank" rel="noreferrer" className="red">
                                     ms
                                 </a>
-                                <br />A small utility to convert strings to
-                                milliseconds and back.
+                                <br />A small utility to convert strings to milliseconds and back.
                             </p>
                             <p>
-                                <a
-                                    href="http://npmjs.com/package/keyv"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="red"
-                                >
+                                <a href="http://npmjs.com/package/keyv" target="_blank" rel="noreferrer" className="red">
                                     keyv
                                 </a>
-                                <br />A key-value based in-memory storage that
-                                can be persistent.
+                                <br />A key-value based in-memory storage that can be persistent.
                             </p>
                         </div>
                         <div className="documentation">
                             <h2>
-                                <a
-                                    id="documentation"
-                                    href="#documentation"
-                                    className="red"
-                                >
+                                <a id="documentation" href="#documentation" className="red">
                                     #
                                 </a>{" "}
                                 Documentation
                             </h2>
                             <h3>
-                                <a
-                                    id="aeroclient"
-                                    href="#aeroclient"
-                                    className="red"
-                                >
+                                <a id="aeroclient" href="#aeroclient" className="red">
                                     #
                                 </a>{" "}
                                 AeroClient
                             </h3>
                             <h4>Constructor</h4>
                             <p>
-                                The constructor takes two arguments: AeroClient
-                                options, and{" "}
-                                <a href="https://discord.js.org/#/docs/main/stable/class/Client">
-                                    Client
-                                </a>{" "}
-                                options.
+                                The constructor takes two arguments: AeroClient options, and{" "}
+                                <a href="https://discord.js.org/#/docs/main/stable/class/Client">Client</a> options.
                                 <br />
                                 It's less confusing and easy to manage.
                             </p>
@@ -286,20 +254,48 @@ new AeroClient(clientOptions, options);
 `}
                                 </code>
                             </pre>
-                            <span className="red">@param</span>{" "}
-                            <code>clientOptions</code> – AeroClient options
+                            <span className="red">@param</span> <code>clientOptions</code> – AeroClient options
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>options</code> –{" "}
-                            <a href="https://discord.js.org/#/docs/main/stable/class/Client">
-                                Client
-                            </a>{" "}
-                            options
+                            <span className="red">@param</span> <code>options</code> –{" "}
+                            <a href="https://discord.js.org/#/docs/main/stable/class/Client">Client</a> options
+                            <p>
+                                AeroClient also has a static factory method to create instances.
+                                <br />
+                                The static method will load any AeroClient configuration files.
+                                <br />
+                                Supported file names are:
+                                <ul>
+                                    <li>
+                                        <code>aeroclient.env</code>
+                                    </li>
+                                    <li>
+                                        <code>aeroclient.conf</code>
+                                    </li>
+                                    <li>
+                                        <code>aeroclient.json</code>
+                                    </li>
+                                    <li>
+                                        <code>aeroclient.config.js</code>
+                                    </li>
+                                    <li>
+                                        <code>aeroclient.config.ts</code>
+                                    </li>
+                                </ul>
+                            </p>
+                            <pre>
+                                <code>
+                                    {`\
+await AeroClient.create(clientOptions, options);
+`}
+                                </code>
+                            </pre>
+                            <span className="red">@param</span> <code>clientOptions</code> – AeroClient options
+                            <br />
+                            <span className="red">@param</span> <code>options</code> –{" "}
+                            <a href="https://discord.js.org/#/docs/main/stable/class/Client">Client</a> options
                             <h4 id="options">AeroClientOptions</h4>
                             <p>
-                                Keep in mind that all of these are{" "}
-                                <em>optional</em>, but some of them are
-                                recommended.
+                                Keep in mind that all of these are <em>optional</em>, but some of them are recommended.
                             </p>
                             <ul>
                                 <li>
@@ -309,162 +305,170 @@ new AeroClient(clientOptions, options);
                                     <code>prefix</code> – The client's prefix
                                 </li>
                                 <li>
-                                    <code>logging</code> – Flag to enable
-                                    logging
+                                    <code>logging</code> – Flag to enable logging
                                 </li>
                                 <li>
-                                    <code>loggerHeader</code> – The client's
-                                    logger's header
+                                    <code>loggerHeader</code> – The client's logger's header
                                 </li>
                                 <li>
-                                    <code>loggerShowFlags</code> – Recommended
-                                    if your terminal doesn't have colors
+                                    <code>loggerShowFlags</code> – Recommended if your terminal doesn't have colors
                                 </li>
                                 <li>
-                                    <code>commandsPath</code> – Path where all
-                                    your command files are found
+                                    <code>commandsPath</code> – Path where all your command files are found
                                 </li>
                                 <li>
-                                    <code>eventsPath</code> – Path where all
-                                    your event files are found
+                                    <code>eventsPath</code> – Path where all your event files are found
                                 </li>
                                 <li>
-                                    <code>messagesPath</code> – Path where your
-                                    predefined custom response messages are
+                                    <code>messagesPath</code> – Path where your predefined custom response messages are
                                 </li>
                                 <li>
-                                    <code>languagesPath</code> – Path where your
-                                    predefined translated messages are
+                                    <code>languagesPath</code> – Path where your predefined translated messages are
                                 </li>
                                 <li>
-                                    <code>connectionUri</code> – A uri to
-                                    connect to your database so AeroClient can
-                                    store data
+                                    <code>connectionUri</code> – A uri to connect to your database so AeroClient can store data
                                 </li>
                                 <li>
-                                    <code>useDefaults</code> – Flag to enable
-                                    default commands and settings
+                                    <code>useDefaults</code> – Flag to enable default commands and settings
                                 </li>
                                 <li>
-                                    <code>persistentCooldowns</code> – Flag to
-                                    enable persistent cooldowns
+                                    <code>persistentCooldowns</code> – Flag to enable persistent cooldowns
                                 </li>
                                 <li>
-                                    <code>disableStaffCooldowns</code> – Flag to
-                                    disable cooldowns for staff
+                                    <code>disableStaffCooldowns</code> – Flag to disable cooldowns for staff
                                 </li>
                                 <li>
-                                    <code>allowSpaces</code> – Flag to enable
-                                    whitespace between prefix and command
+                                    <code>allowSpaces</code> – Flag to enable whitespace between prefix and command
                                 </li>
                                 <li>
                                     <code>responses</code> – Response info
                                 </li>
                                 <ul>
                                     <li>
-                                        <code>cooldown</code> – Reponse to send
-                                        when the command is on cooldown
+                                        <code>cooldown</code> – Reponse to send when the command is on cooldown
                                     </li>
                                     <li>
-                                        <code>error</code> – Response to send
-                                        when an error occurs
+                                        <code>error</code> – Response to send when an error occurs
                                     </li>
                                     <li>
-                                        <code>usage</code> – Response to send
-                                        when the usage is incorrect
+                                        <code>usage</code> – Response to send when the usage is incorrect
                                     </li>
                                     <li>
-                                        <code>nsfw</code> – Response to send
-                                        when an NSFW command is used in a SFW
-                                        channel
+                                        <code>nsfw</code> – Response to send when an NSFW command is used in a SFW channel
                                     </li>
                                     <li>
-                                        <code>guild</code> – Response to send
-                                        when a guild only command is used in a
-                                        direct message
+                                        <code>guild</code> – Response to send when a guild only command is used in a direct
+                                        message
                                     </li>
                                     <li>
-                                        <code>dm</code> – Response to send when
-                                        a direct message only command is used in
-                                        a guild
+                                        <code>dm</code> – Response to send when a direct message only command is used in a guild
                                     </li>
                                     <li>
-                                        <code>staff</code> – Response to send
-                                        when a non-staff user attempts to use a
-                                        staff only command
-                                    </li>
-                                    <li>
-                                        <code>test</code> - Response to send
-                                        when a test server only conmand is
-                                        attempted to be run elsewhere
-                                    </li>
-                                    <li>
-                                        <code>guarded</code> - Response to send
-                                        when someone attempts to disable a
-                                        guarded command
-                                    </li>
-                                    <li>
-                                        <code>disabled</code> - Response to send
-                                        when someone attmempts to run a disabled
+                                        <code>staff</code> – Response to send when a non-staff user attempts to use a staff only
                                         command
                                     </li>
                                     <li>
-                                        <code>perms</code> - Response to send
-                                        when someone attempts to run a command
-                                        but doesn't have sufficient permissions
+                                        <code>test</code> - Response to send when a test server only conmand is attempted to be
+                                        run elsewhere
+                                    </li>
+                                    <li>
+                                        <code>guarded</code> - Response to send when someone attempts to disable a guarded
+                                        command
+                                    </li>
+                                    <li>
+                                        <code>disabled</code> - Response to send when someone attmempts to run a disabled
+                                        command
+                                    </li>
+                                    <li>
+                                        <code>perms</code> - Response to send when someone attempts to run a command but doesn't
+                                        have sufficient permissions
+                                    </li>
+                                    <li>
+                                        <code>ratelimit</code> - Response to send when someone is being ratelimited
                                     </li>
                                 </ul>
                                 <li>
-                                    <code>staff</code> – Array of strings of
-                                    staff ids
+                                    <code>staff</code> – Array of strings of staff ids
                                 </li>
                                 <li>
-                                    <code>testServers</code> - Array of strings
-                                    of test server IDs
+                                    <code>testServers</code> - Array of strings of test server IDs
                                 </li>
                                 <li>
-                                    <code>customHandler</code> – A callback to
-                                    use instead of our command handler
+                                    <code>dev</code> – Options to for development
+                                </li>
+                                <ul>
+                                    <li>
+                                        <code>dontLoad</code> – Do not load these things into the client.
+                                    </li>
+                                    <ul>
+                                        <li>
+                                            <code>categories</code> – Do not load these categories
+                                        </li>
+                                        <li>
+                                            <code>commands</code> – Do not load these commands
+                                        </li>
+                                        <li>
+                                            <code>events</code> – Do not load these events
+                                        </li>
+                                        <li>
+                                            <code>folders</code> – Do not load these folders
+                                        </li>
+                                    </ul>
+                                    <li>
+                                        <code>eval</code> – Use eval
+                                    </li>
+                                    <ul>
+                                        <li>
+                                            <code>console</code> – Use eval in the console like browser dev tools
+                                        </li>
+                                        <li>
+                                            <code>command</code> – Load an eval command that can only be used by staff and in
+                                            test servers
+                                        </li>
+                                    </ul>
+                                    <li>
+                                        <code>events</code> – Extra events
+                                    </li>
+                                    <ul>
+                                        <li>
+                                            <code>debug</code> – Enable debug event
+                                        </li>
+                                        <li>
+                                            <code>error</code> – Enable error event
+                                        </li>
+                                    </ul>
+                                </ul>
+                                <li>
+                                    <code>customHandler</code> – A callback to use instead of our command handler
                                 </li>
                                 <li>
-                                    <code>readyCallback</code> – A callback to
-                                    use instead of our ready event callback
+                                    <code>readyCallback</code> – A callback to use instead of our ready event callback
                                 </li>
                             </ul>
                             <h4>ClientOptions</h4>
                             <p>
                                 View the discord.js docs{" "}
-                                <a href="https://discord.js.org/#/docs/main/stable/typedef/ClientOptions">
-                                    here
-                                </a>
-                                .
+                                <a href="https://discord.js.org/#/docs/main/stable/typedef/ClientOptions">here</a>.
                             </p>
                             <h4 id="properties">Properties</h4>
                             <ul>
                                 <li>
-                                    <code>commands</code> – Collection of all
-                                    stored commands
+                                    <code>commands</code> – Collection of all stored commands
                                 </li>
                                 <li>
-                                    <code>logger</code> – Logger used to log
-                                    events
+                                    <code>logger</code> – Logger used to log events
                                 </li>
                                 <li>
-                                    <code>prefixes</code> – Keyv that stores
-                                    prefixes for each guild
+                                    <code>prefixes</code> – Keyv that stores prefixes for each guild
                                 </li>
                                 <li>
-                                    <code>clientOptions</code> – The client
-                                    options that were passed into the
-                                    constructor
+                                    <code>clientOptions</code> – The client options that were passed into the constructor
                                 </li>
                                 <li>
-                                    <code>localeStore</code> – Stored locales
-                                    for each user
+                                    <code>localeStore</code> – Stored locales for each user
                                 </li>
                                 <li>
-                                    <code>locales</code> – Stored translated
-                                    resopnses
+                                    <code>locales</code> – Stored translated resopnses
                                 </li>
                             </ul>
                             <h4 id="methods">Methods</h4>
@@ -474,11 +478,9 @@ registerCommand(command)
 `}</code>
                             </pre>
                             <p>
-                                Registers a command object into the client's{" "}
-                                <code>commands</code> property.
+                                Registers a command object into the client's <code>commands</code> property.
                             </p>
-                            <span className="red">@param</span>{" "}
-                            <code>command</code> – Command object to register
+                            <span className="red">@param</span> <code>command</code> – Command object to register
                             <br />
                             <br />
                             <br />
@@ -488,8 +490,7 @@ loadCommands(directory)
 `}</code>
                             </pre>
                             <p>Registers all commands in a directory.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>directory</code> – Directory to load
+                            <span className="red">@param</span> <code>directory</code> – Directory to load
                             <br />
                             <br />
                             <br />
@@ -499,8 +500,7 @@ loadEvents(directory)
 `}</code>
                             </pre>
                             <p>Registers all events in a directory.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>directory</code> – Directory to load
+                            <span className="red">@param</span> <code>directory</code> – Directory to load
                             <br />
                             <br />
                             <br />
@@ -510,8 +510,7 @@ loadMessages(directory)
 `}</code>
                             </pre>
                             <p>Loads a JSON file with the custom messages.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>path</code> – Path to the JSON file
+                            <span className="red">@param</span> <code>path</code> – Path to the JSON file
                             <br />
                             <br />
                             <br />
@@ -521,8 +520,7 @@ loadLocales(directory)
 `}</code>
                             </pre>
                             <p>Registers all locales in a directory.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>directory</code> – Directory to load
+                            <span className="red">@param</span> <code>directory</code> – Directory to load
                             <br />
                             <br />
                             <br />
@@ -532,42 +530,33 @@ paginate(message, pages, options)
 `}</code>
                             </pre>
                             <p>
-                                The docs for this method are{" "}
-                                <a href="#pagination">here</a>.
+                                The docs for this method are <a href="#pagination">here</a>.
                             </p>
                             <h4 id="middleware">Middleware</h4>
                             <p>
-                                AeroClient introduces something new in
-                                discord.js frameworks.
+                                AeroClient introduces something new in discord.js frameworks.
                                 <br />
-                                This something new is called middleware. If you
-                                have used express you may know what it is,
+                                This something new is called middleware. If you have used express you may know what it is,
                                 <br />
                                 but if you don't, we will explain.
                                 <br />
-                                Middleware in our framework refers to a function
-                                that runs right before command execution.
+                                Middleware in our framework refers to a function that runs right before command execution.
                                 <br />
-                                They are also is executed in the order you used
-                                them, and they change AeroClient's behaviour.
+                                They are also is executed in the order you used them, and they change AeroClient's behaviour.
                             </p>
-                            <p>
-                                First, let's see the method to use middleware.
-                            </p>
+                            <p>First, let's see the method to use middleware.</p>
                             <pre>
                                 <code>{`\
 use(middleware)
 `}</code>
                             </pre>
                             <p>Applies middleware to the client.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>middleware</code> – The middleware function
+                            <span className="red">@param</span> <code>middleware</code> – The middleware function
                             <br />
                             <p>
                                 The middleware function will get two parameters.
                                 <br />
-                                The first is the context object and the second
-                                is a function.
+                                The first is the context object and the second is a function.
                             </p>
                             <pre>
                                 <code>{`\
@@ -582,29 +571,22 @@ client.use(({ message }, next, stop) => {
 `}</code>
                             </pre>
                             <p>
-                                The context object has three properties. The
-                                message, the arguments for the command, and the
+                                The context object has three properties. The message, the arguments for the command, and the
                                 command object itself.
                                 <br />
-                                Note that in the event that a command is not
-                                found, <code>command</code> will be undefined.
+                                Note that in the event that a command is not found, <code>command</code> will be undefined.
                             </p>
                             <p>
-                                Calling the next function will allow other
-                                middleware to execute, like express.
+                                Calling the next function will allow other middleware to execute, like express.
                                 <br />
-                                However, if you call <code>stop</code>, the
-                                middleware stops command execution as well.
+                                However, if you call <code>stop</code>, the middleware stops command execution as well.
                             </p>
                             <p>
-                                In the above example, if a message contains{" "}
-                                <code>some bad word</code>, the client will
-                                reply <code>no u</code> and stop command
-                                execution.
+                                In the above example, if a message contains <code>some bad word</code>, the client will reply{" "}
+                                <code>no u</code> and stop command execution.
                                 <br />
-                                This means that even if the user used{" "}
-                                <code>!help some bad word</code>, the client
-                                will not execute the help command.
+                                This means that even if the user used <code>!help some bad word</code>, the client will not
+                                execute the help command.
                             </p>
                             <h3 id="command">The Command type</h3>
                             <h4>Properties</h4>
@@ -613,24 +595,19 @@ client.use(({ message }, next, stop) => {
                                     <code>name</code> – Name of the command
                                 </li>
                                 <li>
-                                    <code>aliases</code> – Aliases of the
-                                    command
+                                    <code>aliases</code> – Aliases of the command
                                 </li>
                                 <li>
-                                    <code>category</code> – The command's
-                                    category
+                                    <code>category</code> – The command's category
                                 </li>
                                 <li>
-                                    <code>args</code> – If arguments are
-                                    required
+                                    <code>args</code> – If arguments are required
                                 </li>
                                 <li>
-                                    <code>minArgs</code> – Minimum amount of
-                                    arguments required
+                                    <code>minArgs</code> – Minimum amount of arguments required
                                 </li>
                                 <li>
-                                    <code>maxArgs</code> – Maximum amount of
-                                    arguments required
+                                    <code>maxArgs</code> – Maximum amount of arguments required
                                 </li>
                                 <li>
                                     <code>usage</code> – The command's usage
@@ -639,49 +616,51 @@ client.use(({ message }, next, stop) => {
                                     <code>cooldown</code> – Cooldown in seconds
                                 </li>
                                 <li>
-                                    <code>description</code> – Short description
-                                    of the command
+                                    <code>serverCooldown</code> – Server cooldown in seconds
                                 </li>
                                 <li>
-                                    <code>details</code> – Long description of
-                                    the command
+                                    <code>metasyntax</code> – <a href="#arguments">Arguments</a> instance to use for validation
+                                    and parsing
                                 </li>
                                 <li>
-                                    <code>guildOnly</code> – If the command can
-                                    only be executed in a guild
+                                    <code>ratelimit</code> – <a href="#ratelimit">Ratelimit</a> instance to use for ratelimiting
                                 </li>
                                 <li>
-                                    <code>staffOnly</code> – If the command can
-                                    only be executed by staff
+                                    <code>serverCooldown</code> – Server cooldown in seconds
                                 </li>
                                 <li>
-                                    <code>testOnly</code> - If the command can
-                                    only be executed in a test server
+                                    <code>description</code> – Short description of the command
                                 </li>
                                 <li>
-                                    <code>dmOnly</code> – If the command can
-                                    only be executed in a direct message
+                                    <code>details</code> – Long description of the command
                                 </li>
                                 <li>
-                                    <code>nsfw</code> – If the command can only
-                                    be executed in an NSFW channel
+                                    <code>guildOnly</code> – If the command can only be executed in a guild
                                 </li>
                                 <li>
-                                    <code>hidden</code> – If the command should
-                                    be hidden from the default help command
+                                    <code>staffOnly</code> – If the command can only be executed by staff
                                 </li>
                                 <li>
-                                    <code>guarded</code> - If the command should
-                                    be protected from being disabled
+                                    <code>testOnly</code> - If the command can only be executed in a test server
+                                </li>
+                                <li>
+                                    <code>dmOnly</code> – If the command can only be executed in a direct message
+                                </li>
+                                <li>
+                                    <code>nsfw</code> – If the command can only be executed in an NSFW channel
+                                </li>
+                                <li>
+                                    <code>hidden</code> – If the command should be hidden from the default help command
+                                </li>
+                                <li>
+                                    <code>guarded</code> - If the command should be protected from being disabled
                                 </li>
                                 <li>
                                     <code>permissions</code> - Array of{" "}
                                     <a href="https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS">
                                         PermissionString
                                     </a>{" "}
-                                    that contains the required permissions to
-                                    run this command. Not checked if command is
-                                    run in DMs.
+                                    that contains the required permissions to run this command.
                                 </li>
                             </ul>
                             <h4>Methods</h4>
@@ -690,38 +669,29 @@ client.use(({ message }, next, stop) => {
 callback(context)
 `}</code>
                             </pre>
-                            <p>
-                                The callback takes one parameter, the context
-                                object. Its properties are listed below.
-                            </p>
+                            <p>The callback takes one parameter, the context object. Its properties are listed below.</p>
                             <ul>
                                 <li>
-                                    <code>message</code> – The message obejct
-                                    from the message event
+                                    <code>message</code> – The message obejct from the message event
                                 </li>
                                 <li>
-                                    <code>args</code> – The arguments for the
-                                    command
+                                    <code>args</code> – The arguments for the command
                                 </li>
                                 <li>
-                                    <code>client</code> – The AeroClient
-                                    instance
+                                    <code>client</code> – The AeroClient instance
                                 </li>
                                 <li>
                                     <code>text</code> – Full message content
                                 </li>
                             </ul>
-                            <span className="red">@param</span>{" "}
-                            <code>context</code> – The context object
+                            <span className="red">@param</span> <code>context</code> – The context object
                             <br />
                             <h3 id="usage">Usage</h3>
                             <h4 id="commands">Commands</h4>
                             <p>
-                                AeroClient supports two ways for declaring
-                                commands.
+                                AeroClient supports two ways for declaring commands.
                                 <br />
-                                The first way we shall look at is{" "}
-                                <code>client.registerCommand</code>
+                                The first way we shall look at is <code>client.registerCommand</code>
                             </p>
                             <pre>
                                 <code>{`\
@@ -733,10 +703,7 @@ client.registerCommand({
 })
 `}</code>
                             </pre>
-                            <p>
-                                You can also wrap it in a function and export it
-                                from another file.
-                            </p>
+                            <p>You can also wrap it in a function and export it from another file.</p>
                             <pre>
                                 <code>{`\
 module.exports = (client) => {
@@ -760,18 +727,10 @@ module.exports = {
 }
 `}</code>
                             </pre>
-                            <p>
-                                Generally the second method is preferred since
-                                it is more concise.
-                            </p>
+                            <p>Generally the second method is preferred since it is more concise.</p>
                             <h4 id="events">Events</h4>
-                            <p>
-                                AeroClient also supports individual event files.
-                            </p>
-                            <p>
-                                In each file, there should be one export. An
-                                example is show below.
-                            </p>
+                            <p>AeroClient also supports individual event files.</p>
+                            <p>In each file, there should be one export. An example is show below.</p>
                             <pre>
                                 <code>{`\
 module.exports = {
@@ -784,33 +743,24 @@ module.exports = {
 `}</code>
                             </pre>
                             <p>
-                                There are three properties. The name, whether it
-                                should execute once or every time it is emitted,
-                                and finally, the callback to execute.
+                                There are three properties. The name, whether it should execute once or every time it is
+                                emitted, and finally, the callback to execute.
                             </p>
                             <h4 id="messages">Messages</h4>
+                            <p>AeroClient allows you to configure response messages with a JSON file.</p>
                             <p>
-                                AeroClient allows you to configure response
-                                messages with a JSON file.
-                            </p>
-                            <p>
-                                Simple add the path to the JSON file in as the{" "}
-                                <code>messagesPath</code> option.
+                                Simple add the path to the JSON file in as the <code>messagesPath</code> option.
                             </p>
                             <h4 id="locales">Cancel cooldowns</h4>
                             <p>
-                                Sometimes you don't want the cooldown to be set.
-                                A common situation is when a user messes up
+                                Sometimes you don't want the cooldown to be set. A common situation is when a user messes up
                                 their arguments and you tell them to try again.
                                 <br />
-                                But the cooldown will be set, and they have to
-                                wait.
+                                But the cooldown will be set, and they have to wait.
                                 <br />
-                                To give a better experience, AeroClient has a
-                                feature to cancel the cooldown.
+                                To give a better experience, AeroClient has a feature to cancel the cooldown.
                                 <br />
-                                Simple return the string <code>"invalid"</code>,
-                                and AeroClient will not set the cooldown.
+                                Simple return the string <code>"invalid"</code>, and AeroClient will not set the cooldown.
                                 <pre>
                                     <code>{`\
 if (args[0] !== "something") {
@@ -822,8 +772,7 @@ if (args[0] !== "something") {
                             </p>
                             <h4 id="locales">Response templates</h4>
                             <p>
-                                For responses, there are{" "}
-                                <strong>templates</strong>.
+                                For responses, there are <strong>templates</strong>.
                                 <br />
                                 Templates allow you to output dynamic responses.
                                 <br />
@@ -836,14 +785,12 @@ Hey, you need to wait $TIME to execute $COMMAND!
 `}
                                     </code>
                                 </pre>
-                                All responses have a <code>COMMAND</code>{" "}
-                                template.
+                                All responses have a <code>COMMAND</code> template.
                                 <br />
                                 Some responses have special templates.
                                 <br />
-                                The cooldown response, for example, has a{" "}
-                                <code>TIME</code> template for how much time is
-                                left on the cooldown.
+                                The cooldown response, for example, has a <code>TIME</code> template for how much time is left
+                                on the cooldown.
                                 <br />
                                 For a full list of the templates, see this{" "}
                                 <a
@@ -855,37 +802,28 @@ Hey, you need to wait $TIME to execute $COMMAND!
                                 </a>
                                 .
                             </p>
-                            <h4 id="locales">
-                                Locales and translated responses
-                            </h4>
+                            <h4 id="locales">Locales and translated responses</h4>
                             <p>
                                 AeroClient supports a number of locales.
                                 <br />
-                                Your translated messages should be contained in
-                                a JSON file with the locale as the name.
+                                Your translated messages should be contained in a JSON file with the locale as the name.
                                 <br />
-                                For example, a JSON file with French
-                                translations would be named <code>fr.json</code>
+                                For example, a JSON file with French translations would be named <code>fr.json</code>
                                 .
                                 <br />
-                                AeroClient will automatically load all support
-                                locales if you add the{" "}
-                                <code>languagesPath</code> option.
+                                AeroClient will automatically load all support locales if you add the <code>
+                                    languagesPath
+                                </code>{" "}
+                                option.
                                 <br />
-                                AeroClient supports the following locales:{" "}
-                                <code>ar, en, fr, zh, de, pt, ru, es</code>
+                                AeroClient supports the following locales: <code>ar, en, fr, zh, de, pt, ru, es</code>
                             </p>
                             <h3 id="arguments">Arguments</h3>
                             <p>
-                                Arguments is a powerful class used to parse and
-                                validate command arguments.
+                                Arguments is a powerful class used to parse and validate command arguments.
                                 <br />
                                 The Arguments class employs a kind of{" "}
-                                <a
-                                    href="https://en.wikipedia.org/wiki/Metasyntax"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
+                                <a href="https://en.wikipedia.org/wiki/Metasyntax" target="_blank" rel="noopener noreferrer">
                                     metasyntax
                                 </a>{" "}
                                 to compile templates.
@@ -898,16 +836,49 @@ Hey, you need to wait $TIME to execute $COMMAND!
                                 </pre>
                                 <ul>
                                     <li>
-                                        Arguments wrapped in <code>{`<>`}</code>{" "}
-                                        are <strong>required.</strong>
+                                        Arguments wrapped in <code>{`<>`}</code> are <strong>required.</strong>
                                     </li>
                                     <li>
-                                        Arguments wrapped in <code>{`[]`}</code>{" "}
-                                        are <strong>optional.</strong>
+                                        Arguments wrapped in <code>{`[]`}</code> are <strong>optional.</strong>
                                     </li>
                                     <li>
-                                        <code>{`|`}</code> represents the{" "}
-                                        <strong>or</strong> operator.
+                                        <code>{`|`}</code> represents the <strong>or</strong> operator.
+                                    </li>
+                                </ul>
+                                <p>These are the supported types:</p>
+                                <ul>
+                                    <li>
+                                        <code>member</code> – Mention or ID
+                                    </li>
+                                    <li>
+                                        <code>user</code> – Mention or ID
+                                    </li>
+                                    <li>
+                                        <code>role</code> – Mention or ID
+                                    </li>
+                                    <li>
+                                        <code>channel</code> – Mention or ID
+                                    </li>
+                                    <li>
+                                        <code>number</code> – A float
+                                    </li>
+                                    <li>
+                                        <code>integer</code> – An integer
+                                    </li>
+                                    <li>
+                                        <code>string</code> – Any string
+                                    </li>
+                                    <li>
+                                        <code>boolean</code> – A boolean word (true/false, on/off, etc)
+                                    </li>
+                                    <li>
+                                        <code>duration</code> – A duration of time
+                                    </li>
+                                    <li>
+                                        <code>date</code> – A specific date
+                                    </li>
+                                    <li>
+                                        <code>literals</code> – A literal string (wrapped in ' or ")
                                     </li>
                                 </ul>
                             </p>
@@ -915,8 +886,7 @@ Hey, you need to wait $TIME to execute $COMMAND!
                             <p>
                                 Please do not use the constructor directly.
                                 <br />
-                                If you are, consider using{" "}
-                                <code>Arguments.from</code> instead.
+                                If you are, consider using <code>Arguments.from</code> instead.
                             </p>
                             <h4 id="arguments-static">Static methods</h4>
                             <pre>
@@ -924,13 +894,8 @@ Hey, you need to wait $TIME to execute $COMMAND!
 use(client)
 `}</code>
                             </pre>
-                            <p>
-                                Allows the Arguments class to use the Discord
-                                API.
-                            </p>
-                            <span className="red">@param</span>{" "}
-                            <code>client</code> – An AeroClient to use for the
-                            Discord API.
+                            <p>Allows the Arguments class to use the Discord API.</p>
+                            <span className="red">@param</span> <code>client</code> – An AeroClient to use for the Discord API
                             <br />
                             <pre>
                                 <code>{`\
@@ -954,11 +919,9 @@ const argumentRegex = Arguments.compile("<person> <date>", {
 }); 
 `}</code>{" "}
                             </pre>
-                            <span className="red">@param</span>{" "}
-                            <code>metasyntax</code> – The metasyntax to compile.
+                            <span className="red">@param</span> <code>metasyntax</code> – The metasyntax to compile
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>legend</code> – An object with type aliases.
+                            <span className="red">@param</span> <code>legend</code> – An object with type aliases
                             <br />
                             <pre>
                                 <code>{`\
@@ -966,14 +929,11 @@ from(lexicon)
 `}</code>
                             </pre>
                             <p>
-                                Create an Arguments instance directly from a
-                                lexicon.
+                                Create an Arguments instance directly from a lexicon.
                                 <br />
-                                This method is not supported and is simply a
-                                better alternative to the constructor.
+                                This method is not supported and is simply a better alternative to the constructor.
                             </p>
-                            <span className="red">@param</span>{" "}
-                            <code>lexicon</code> – Lexicon to use.
+                            <span className="red">@param</span> <code>lexicon</code> – Lexicon to use
                             <br />
                             <h4 id="arguments-methods">Methods</h4>
                             <pre>
@@ -985,11 +945,9 @@ test(message, args)
                                 Tests the given arguments for validity. <br />
                                 Keep in mind that this is asynchronous.
                             </p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message for context.
+                            <span className="red">@param</span> <code>message</code> – Message for context
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>args</code> – Command arguments
+                            <span className="red">@param</span> <code>args</code> – Command arguments
                             <br />
                             <pre>
                                 <code>{`\
@@ -997,16 +955,78 @@ parse(message, args)
 `}</code>
                             </pre>
                             <p>
-                                Parses the given arguments into objects.
-                                Arguments unable to be parsed will be undefined
+                                Parses the given arguments into objects. Arguments unable to be parsed will be undefined
                                 instead.
                                 <br /> Keep in mind that this is asynchronous.
                             </p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message for context.
+                            <span className="red">@param</span> <code>message</code> – Message for context
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>args</code> – Command arguments
+                            <span className="red">@param</span> <code>args</code> – Command arguments
+                            <br />
+                            <h3 id="ratelimit">Ratelimit</h3>
+                            <p>
+                                Ratelimit is a class that represents a ratelimit.
+                                <br />
+                                It is primarily useful if you don't want a simple cooldown, but rather a ratelimit.
+                                <br />
+                                Ratelimit has an extremely simple API for managing your ratelimits.
+                            </p>
+                            <h4>Constructor</h4>
+                            <p>
+                                Please do not use the constructor directly.
+                                <br />
+                                If you are, consider using <code>Ratelimit.create</code> instead.
+                            </p>
+                            <h4 id="ratelimit-static">Static methods</h4>
+                            <pre>
+                                <code>{`\
+create(options)
+`}</code>
+                            </pre>
+                            <p>Creates a ratelimit.</p>
+                            <span className="red">@param</span> <code>options</code> – Options to configure the instance
+                            <br />
+                            <p>
+                                Ratelimit options are:
+                                <ul>
+                                    <li>
+                                        <code>calls</code> – Number of calls
+                                    </li>
+                                    <li>
+                                        <code>per</code> – Time span ("second", "minute", "hour", "day")
+                                    </li>
+                                    <li>
+                                        <code>clear</code> – Clear calls every interval instead
+                                    </li>
+                                    <li>
+                                        <code>recharge</code> – Cooldown time until ratelimit is active again
+                                    </li>
+                                </ul>
+                            </p>
+                            <h4 id="ratelimit-methods">Methods</h4>
+                            <pre>
+                                <code>{`\
+add(id)
+`}</code>
+                            </pre>
+                            <p>Increments the calls for an ID</p>
+                            <span className="red">@param</span> <code>id</code> – ID to add
+                            <br />
+                            <pre>
+                                <code>{`\
+remove(id)
+`}</code>
+                            </pre>
+                            <p>Decrements the calls for an ID</p>
+                            <span className="red">@param</span> <code>id</code> – ID to remove
+                            <br />
+                            <pre>
+                                <code>{`\
+check(id)
+`}</code>
+                            </pre>
+                            <p>Checks if the ID is being ratelimited</p>
+                            <span className="red">@param</span> <code>id</code> – ID to check
                             <br />
                             <h3 id="aeroembed">AeroEmbed</h3>
                             <p>
@@ -1027,9 +1047,7 @@ blank(inline)
 `}</code>
                             </pre>
                             <p>Adds a blank field.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>inline</code> – Should the blank field be
-                            inline?
+                            <span className="red">@param</span> <code>inline</code> – Should the blank field be inline?
                             <br />
                             <pre>
                                 <code>{`\
@@ -1037,12 +1055,9 @@ twoByTwo(data, spaceOut)
 `}</code>
                             </pre>
                             <p>Creates a 2×2 grid layout.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>data</code> – Data for the layout.
+                            <span className="red">@param</span> <code>data</code> – Data for the layout.
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>spaceOut</code> – Should the grid be spaced
-                            out?
+                            <span className="red">@param</span> <code>spaceOut</code> – Should the grid be spaced out?
                             <br />
                             <pre>
                                 <code>{`\
@@ -1050,8 +1065,7 @@ threeByThree(data)
 `}</code>
                             </pre>
                             <p>Creates a 3×3 grid layout.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>data</code> – Data for the layout.
+                            <span className="red">@param</span> <code>data</code> – Data for the layout.
                             <br />
                             <pre>
                                 <code>{`\
@@ -1076,8 +1090,7 @@ css(css)
                                 </a>
                                 .
                                 <br />
-                                TipEmbed is for embeds that display small tips
-                                (and maybe easter eggs) in their footers.
+                                TipEmbed is for embeds that display small tips (and maybe easter eggs) in their footers.
                             </p>
                             <pre>
                                 <code>{`\
@@ -1085,43 +1098,35 @@ TipEmbed(tips, options)
 `}</code>
                             </pre>
                             <p>Dynamically creates a TipEmbed class.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>tips</code> – Tips to display
+                            <span className="red">@param</span> <code>tips</code> – Tips to display
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>options</code> – Options for the class.
+                            <span className="red">@param</span> <code>options</code> – Options for the class.
                             <br />
                             <ul>
                                 <li>
                                     <code>color</code> – Color of the embed
                                 </li>
                                 <li>
-                                    <code>timestamps</code> – Should the
-                                    timestamp be set?
+                                    <code>timestamps</code> – Should the timestamp be set?
                                 </li>
                                 <li>
-                                    <code>easterEggs</code> – Option for easter
-                                    eggs
+                                    <code>easterEggs</code> – Option for easter eggs
                                     <br />
                                     <ul>
                                         <li>
-                                            <code>eggs</code> – All the easter
-                                            eggs to show
+                                            <code>eggs</code> – All the easter eggs to show
                                         </li>
                                         <li>
-                                            <code>chance</code> – Chance of
-                                            getting an easter egg
+                                            <code>chance</code> – Chance of getting an easter egg
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
                             <h3 id="logger">Logger</h3>
                             <p>
-                                The Logger class is a simple logger that can be
-                                configured easily.
+                                The Logger class is a simple logger that can be configured easily.
                                 <br />
-                                Logger instances only have methods and do not
-                                have properties.
+                                Logger instances only have methods and do not have properties.
                             </p>
                             <h4>Constructor</h4>
                             <pre>
@@ -1129,11 +1134,9 @@ TipEmbed(tips, options)
 new Logger(header, showFlags)
 `}</code>
                             </pre>
-                            <span className="red">@param</span>{" "}
-                            <code>header</code> – Custom header for the logger.
-                            Defaults to <code>logger</code>.<br />
-                            <span className="red">@param</span>{" "}
-                            <code>showFlags</code> – Flag to show flags or not.
+                            <span className="red">@param</span> <code>header</code> – Custom header for the logger. Defaults to{" "}
+                            <code>logger</code>.<br />
+                            <span className="red">@param</span> <code>showFlags</code> – Flag to show flags or not.
                             <h4 id="logger-methods">Methods</h4>
                             <pre>
                                 <code>{`\
@@ -1141,8 +1144,7 @@ success(message)
 `}</code>
                             </pre>
                             <p>Logs a message in green.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message to log
+                            <span className="red">@param</span> <code>message</code> – Message to log
                             <br />
                             <pre>
                                 <code>{`\
@@ -1150,8 +1152,7 @@ info(message)
 `}</code>
                             </pre>
                             <p>Logs a message in blue.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message to log
+                            <span className="red">@param</span> <code>message</code> – Message to log
                             <br />
                             <pre>
                                 <code>{`\
@@ -1159,8 +1160,7 @@ warn(message)
 `}</code>
                             </pre>
                             <p>Logs a message in yellow.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message to log
+                            <span className="red">@param</span> <code>message</code> – Message to log
                             <br />
                             <pre>
                                 <code>{`\
@@ -1168,8 +1168,7 @@ error(message)
 `}</code>
                             </pre>
                             <p>Logs a message in red.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message to log
+                            <span className="red">@param</span> <code>message</code> – Message to log
                             <br />
                             <h2 id="utils">utils</h2>
                             <h3 id="input">Input</h3>
@@ -1179,27 +1178,22 @@ utils.getReply(message, options)
 `}</code>
                             </pre>
                             <p>Helper method for getting text input.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>options</code> – Options for the method
+                            <span className="red">@param</span> <code>options</code> – Options for the method
                             <br />
                             <ul>
                                 <li>
                                     <code>time</code> – Time limit for answers
                                 </li>
                                 <li>
-                                    <code>user</code> – Specific user to accept
-                                    answers from
+                                    <code>user</code> – Specific user to accept answers from
                                 </li>
                                 <li>
-                                    <code>keywords</code> – Array of strings for
-                                    acceptable answers
+                                    <code>keywords</code> – Array of strings for acceptable answers
                                 </li>
                                 <li>
-                                    <code>regex</code> – Regular expression to
-                                    test answers
+                                    <code>regex</code> – Regular expression to test answers
                                 </li>
                             </ul>
                             <pre>
@@ -1208,19 +1202,16 @@ utils.getReaction()
 `}</code>
                             </pre>
                             <p>Helper method for getting reaction input.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>options</code> – Options for the method
+                            <span className="red">@param</span> <code>options</code> – Options for the method
                             <br />
                             <ul>
                                 <li>
                                     <code>time</code> – Time limit for answers
                                 </li>
                                 <li>
-                                    <code>user</code> – Specific user to accept
-                                    answers from
+                                    <code>user</code> – Specific user to accept answers from
                                 </li>
                             </ul>
                             <h3 id="parsing">Parsing</h3>
@@ -1229,24 +1220,16 @@ utils.getReaction()
 utils.formatMacroCase(str)
 `}</code>
                             </pre>
-                            <p>
-                                Converts macro case strings to a more readable
-                                string.
-                            </p>
-                            <span className="red">@param</span>{" "}
-                            <code>string</code> – String to format
+                            <p>Converts macro case strings to a more readable string.</p>
+                            <span className="red">@param</span> <code>string</code> – String to format
                             <br />
                             <pre>
                                 <code>{`\
 utils.formatList(items)
 `}</code>
                             </pre>
-                            <p>
-                                Converts an array of strings into a more
-                                readable string.
-                            </p>
-                            <span className="red">@param</span>{" "}
-                            <code>items</code> – Array to format
+                            <p>Converts an array of strings into a more readable string.</p>
+                            <span className="red">@param</span> <code>items</code> – Array to format
                             <br />
                             <pre>
                                 <code>{`\
@@ -1254,11 +1237,9 @@ utils.parseUsers(message, args)
 `}</code>
                             </pre>
                             <p>Gets user objects from command arguments.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>args</code> – Command arguments
+                            <span className="red">@param</span> <code>args</code> – Command arguments
                             <br />
                             <pre>
                                 <code>{`\
@@ -1266,11 +1247,9 @@ utils.parseMembers(message, args)
 `}</code>
                             </pre>
                             <p>Gets member objects from command arguments.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>args</code> – Command arguments
+                            <span className="red">@param</span> <code>args</code> – Command arguments
                             <br />
                             <pre>
                                 <code>{`\
@@ -1278,11 +1257,9 @@ utils.parseRoles(message, args)
 `}</code>
                             </pre>
                             <p>Gets role objects from command arguments.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>args</code> – Command arguments
+                            <span className="red">@param</span> <code>args</code> – Command arguments
                             <br />
                             <pre>
                                 <code>{`\
@@ -1290,15 +1267,11 @@ utils.trim(str, length)
 `}</code>
                             </pre>
                             <p>
-                                Trims a string to the specified length and
-                                replaces the last three characters with a
-                                ellipsis.
+                                Trims a string to the specified length and replaces the last three characters with a ellipsis.
                             </p>
-                            <span className="red">@param</span> <code>str</code>{" "}
-                            – String to trim
+                            <span className="red">@param</span> <code>str</code> – String to trim
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>length</code> – Max length of the string
+                            <span className="red">@param</span> <code>length</code> – Max length of the string
                             <br />
                             <h3 id="timing">Timing</h3>
                             <pre>
@@ -1307,12 +1280,10 @@ utils.aDelayOf(ms)
 `}</code>
                             </pre>
                             <p>
-                                Waits for a set amount of millliseconds, then
-                                continues execution. Only works with{" "}
+                                Waits for a set amount of millliseconds, then continues execution. Only works with{" "}
                                 <code>await</code>.
                             </p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
                             <pre>
                                 <code>{`\
@@ -1324,12 +1295,10 @@ utils.getStopwatch()
                             <h4 id="stopwatch-properties">Properties</h4>
                             <ul>
                                 <li>
-                                    <code>elapsedTime</code> – Elapsed time from
-                                    when the stopwatch started
+                                    <code>elapsedTime</code> – Elapsed time from when the stopwatch started
                                 </li>
                                 <li>
-                                    <code>isRunning</code> – If the stopwatch is
-                                    running or not
+                                    <code>isRunning</code> – If the stopwatch is running or not
                                 </li>
                             </ul>
                             <h4 id="stopwatch-methods">Methods</h4>
@@ -1364,59 +1333,43 @@ utils.paginate(message, pages, options)
 `}</code>
                             </pre>
                             <p>Starts a pagination.</p>
-                            <span className="red">@param</span>{" "}
-                            <code>message</code> – Message object
+                            <span className="red">@param</span> <code>message</code> – Message object
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>pages</code> – Array of{" "}
-                            <a href="https://discord.js.org/#/docs/main/stable/class/MessageEmbed">
-                                MessageEmbed
-                            </a>{" "}
-                            instances
+                            <span className="red">@param</span> <code>pages</code> – Array of{" "}
+                            <a href="https://discord.js.org/#/docs/main/stable/class/MessageEmbed">MessageEmbed</a> instances
                             <br />
-                            <span className="red">@param</span>{" "}
-                            <code>options</code> – Options for the pagination
+                            <span className="red">@param</span> <code>options</code> – Options for the pagination
                             <br />
                             <p id="pagination-options">The options are:</p>
                             <ul>
                                 <li>
-                                    <code>startingPage</code> – The page to show
-                                    when pagination is first displayed
+                                    <code>startingPage</code> – The page to show when pagination is first displayed
                                 </li>
                                 <li>
-                                    <code>time</code> – Time in milliseconds to
-                                    show the pagination
+                                    <code>time</code> – Time in milliseconds to show the pagination
                                 </li>
                                 <li>
-                                    <code>fastForwardAndRewind</code> – Enables
-                                    two extra features with options
+                                    <code>fastForwardAndRewind</code> – Enables two extra features with options
                                     <ul>
                                         <li>
-                                            <code>time</code> – Time in
-                                            milliseconds to accept answers
+                                            <code>time</code> – Time in milliseconds to accept answers
                                         </li>
                                         <li>
-                                            <code>rewindPrompt</code> – Custom
-                                            prompt to ask when rewinding
+                                            <code>rewindPrompt</code> – Custom prompt to ask when rewinding
                                         </li>
                                         <li>
-                                            <code>fastForwardPrompt</code>{" "}
-                                            – Custom prompt to ask when fast
-                                            forwarding
+                                            <code>fastForwardPrompt</code> – Custom prompt to ask when fast forwarding
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <code>goTo</code> – Enables an extra feature
-                                    with options
+                                    <code>goTo</code> – Enables an extra feature with options
                                     <ul>
                                         <li>
-                                            <code>time</code> – Time in
-                                            milliseconds to accept answers
+                                            <code>time</code> – Time in milliseconds to accept answers
                                         </li>
                                         <li>
-                                            <code>prompt</code> – Custom prompt
-                                            to ask
+                                            <code>prompt</code> – Custom prompt to ask
                                         </li>
                                     </ul>
                                 </li>
