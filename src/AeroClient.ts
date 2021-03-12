@@ -13,7 +13,7 @@ import registerDefaults from "./client/defaults";
 import devOptions from "./client/dev";
 import Loader from "./client/Loader";
 import Pipeline, { Middleware } from "./client/middleware";
-import { AeroClientOptions, Command, Locales, MiddlewareContext } from "./types";
+import { AeroClientOptions, Command, Locales, MiddlewareContext, SlashCommand } from "./types";
 
 /**
  * The AeroClient extends the discord.js Client class to offer more features.
@@ -26,6 +26,10 @@ export default class AeroClient extends Client {
      * The commands that have been registered by AeroClient.
      */
     public commands = new Collection<string, Command>();
+    /**
+     * The slash commands that have been registered by AeroClient.
+     */
+    public interactions = new Collection<string, SlashCommand>();
     /**
      * The logger used to log events.
      * @see https://npmjs.com/package/@aeroware/logger.
@@ -163,7 +167,9 @@ export default class AeroClient extends Client {
             });
         }
 
-        this.localeStore = new Keyv<string>(options.connectionUri, { namespace: "locales" });
+        this.localeStore = new Keyv<string>(options.connectionUri, {
+            namespace: "locales",
+        });
 
         this.disabledCommands = new Keyv<string>(options.connectionUri, {
             namespace: "disabled-commands",

@@ -149,6 +149,59 @@ export interface Command {
 }
 
 /**
+ * An option for a slash command
+ */
+type SlashCommandOption = {
+    /**
+     * The name of the option
+     */
+    name: string;
+    /**
+     * The description of the option
+     */
+    description: string;
+    /**
+     * Number representing the option type
+     */
+    type: number;
+    /**
+     * Is the option required?
+     */
+    requred: boolean;
+    /**
+     * What are the choices of the option?
+     */
+    choices?: {
+        /**
+         * The name of the choice (shown to user)
+         */
+        name: string;
+        /**
+         * The value of the choice (recieved from interaction)
+         */
+        value: string;
+    }[];
+};
+
+/**
+ * A Slash Command
+ */
+export interface SlashCommand {
+    /**
+     * The name of the command
+     */
+    name: string;
+    /**
+     * The description of the command
+     */
+    description: string;
+    /**
+     * The options of the command
+     */
+    options?: SlashCommandOption[];
+}
+
+/**
  * Stored responses for the bot for use in standard situations like an error or cooldown.
  */
 export type ResponseInfo = {
@@ -279,11 +332,11 @@ export interface AeroClientOptions {
      */
     disableStaffCooldowns?: boolean;
     /**
-     * Enable experimental subcommands? [BROKEN]
+     * Enable experimental subcommands?
      */
     experimentalSubcommands?: boolean;
     /**
-     * Options for development.
+     * Options for development. [BETA DO NOT USE]
      */
     dev?: {
         /**
