@@ -1,4 +1,4 @@
-import { Channel, ClientEvents, GuildMember, Message, PermissionString, Role, User } from "discord.js";
+import { Channel, ClientEvents, ClientOptions, GuildMember, Message, PermissionString, Role, User } from "discord.js";
 import AeroClient from ".";
 import Arguments from "./classes/Arguments";
 import Ratelimit from "./classes/Ratelimit";
@@ -310,6 +310,10 @@ export interface AeroClientOptions {
             error?: boolean;
         };
     };
+    /**
+     * Regular discord.js client options.
+     */
+    clientOptions?: ClientOptions;
     /**
      * Custom handler instead of default one.
      */

@@ -31,12 +31,14 @@ export default function devOptions(client: AeroClient) {
             });
         }
         if (options.eval.console) {
-            repl.start().context.client = client;
+            client.once("ready", () => {
+                repl.start().context.client = client;
+            });
         }
     }
     if (options.events) {
         if (options.events.debug) {
-            client.on("debug", client.logger.info.bind(client));
+            client.on("debug", client.logger.info.bind(client.logger));
         }
         if (options.events.error) {
             client.on("error", console.log.bind(console));

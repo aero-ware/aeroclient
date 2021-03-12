@@ -79,7 +79,7 @@ export default class AeroClient extends Client {
         quote: /> +/,
     };
     /**
-     * Literally axios
+     * Literally axios.
      */
     public http = axios;
     /**
@@ -112,12 +112,18 @@ export default class AeroClient extends Client {
     /**
      * @private
      */
-    private middlewares = Pipeline<MiddlewareContext>();
+    private middlewares = {
+        first: Pipeline<MiddlewareContext>(),
+        second: Pipeline<MiddlewareContext>(),
+        third: Pipeline<MiddlewareContext>(),
+    };
     /**
      * @private
      */
     private logChannel: Channel | undefined;
-
+    /**
+     * @private
+     */
     private static configFiles = [
         "aeroclient.conf",
         "aeroclient.env",
@@ -132,7 +138,7 @@ export default class AeroClient extends Client {
      * @param baseOptions Options for the regular trash client.
      */
     public constructor(options: AeroClientOptions, baseOptions?: ClientOptions) {
-        super(baseOptions);
+        super(options.clientOptions || baseOptions);
 
         this.logger = new Logger(
             (options && options.loggerHeader) || "aeroclient",
@@ -189,8 +195,8 @@ export default class AeroClient extends Client {
                         try {
                             this.logChannel = await this.channels.fetch(options.logChannel);
 
-                            if (!["dm", "group", "text"].includes(this.logChannel.type))
-                                this.logger.error("Channel type must be either 'dm', 'group', or 'text'.");
+                            if (!["dm", "text"].includes(this.logChannel.type))
+                                this.logger.error("Channel type must be either 'dm' or 'text'.");
                             else
                                 process.on("unhandledRejection", (err) => {
                                     console.log(err);
@@ -228,7 +234,9 @@ export default class AeroClient extends Client {
                           this.commands.find((cmd) => !!(cmd.aliases && cmd.aliases.includes(commandName || "")))
                         : undefined;
 
-                    const shouldStop = await this.middlewares.execute({
+                    let shouldStop = false;
+
+                    shouldStop = await this.middlewares.first.execute({
                         message,
                         args,
                         command,
@@ -429,6 +437,14 @@ export default class AeroClient extends Client {
                         }
                     }
 
+                    shouldStop = await this.middlewares.second.execute({
+                        message,
+                        args,
+                        command,
+                    });
+
+                    if (shouldStop) return;
+
                     try {
                         if (
                             (await command.callback({
@@ -463,6 +479,14 @@ export default class AeroClient extends Client {
                             } else {
                                 command.ratelimit.add(message.author.id);
                             }
+
+                            shouldStop = await this.middlewares.third.execute({
+                                message,
+                                args,
+                                command,
+                            });
+
+                            if (shouldStop) return;
                         }
                     } catch (err) {
                         console.error(err);
@@ -481,11 +505,23 @@ export default class AeroClient extends Client {
 
     /**
      * Adds a middleware into the client's middleware stack.
-     * @param middleware the middleware function to execute
+     * @param middlewareTthe middleware function to execute.
      */
-    public use(middleware: Middleware<MiddlewareContext>) {
-        this.middlewares.use(middleware);
-        this.emit("middlewareAdd");
+    public use(location: keyof AeroClient["middlewares"], middleware: Middleware<MiddlewareContext>) {
+        if (!this.middlewares[location]) throw new Error("Invalid middleware location.");
+
+        this.middlewares[location].use(middleware);
+
+        return this;
+    }
+
+    /**
+     * Plugs in a plugin.
+     * @param plugin Plugin to plug in.
+     */
+    public plugin(plugin: (client: AeroClient) => unknown) {
+        plugin(this);
+
         return this;
     }
 
@@ -508,7 +544,6 @@ export default class AeroClient extends Client {
      */
     public async loadCommands(directory: string) {
         await this.loader.loadCommands(directory);
-        this.emit("commandsLoaded");
         return this;
     }
 
@@ -518,7 +553,6 @@ export default class AeroClient extends Client {
      */
     public async loadEvents(directory: string) {
         await this.loader.loadEvents(directory);
-        this.emit("eventsLoaded");
         return this;
     }
 
@@ -528,7 +562,6 @@ export default class AeroClient extends Client {
      */
     public async loadMessages(directory: string) {
         await this.loader.loadMessages(directory);
-        this.emit("messagesLoaded");
         return this;
     }
 
@@ -538,7 +571,6 @@ export default class AeroClient extends Client {
      */
     public async loadLocales(dir: string) {
         await this.loader.loadLocales(dir);
-        this.emit("localesLoaded");
         return this;
     }
 
